@@ -1,7 +1,7 @@
 # Phase 01: Foundation — GitHub Repo + Astro Scaffold + Deploy Skeleton
 
 ## Phase Metadata
-- Status: Planned
+- Status: In Progress (repo live; Astro scaffold pending)
 - Last Updated: 2026-10-13
 - Duration Target: 1 short session
 - Related Master Plan: [../master_plan.md](../master_plan.md)
@@ -45,6 +45,14 @@ Create the GitHub repo for `AirminoWebsite/`, then stand up a clean Astro static
 - Actions workflow YAML validates (no secret refs missing); CNAME contains single-line domain placeholder.
 - No `docs/design/index.html` modifications.
 
+## Progress Snapshot
+### Delivered So Far
+- GitHub repo `gbalabanli/AirminoWebsite` (public) created 2026-10-13: https://github.com/gbalabanli/AirminoWebsite
+- Local `git init -b main`, identity `gbalabanli <gbalabanli@users.noreply.github.com>`, baseline commit `b1b9adc` (`.gitignore` + `docs/`) pushed, `main` tracking `origin/main`.
+
+### Known Gaps / Deferred Items
+- Astro scaffold, `Base.astro` + tokens, `astro.config.mjs`, `public/CNAME`, Actions workflow — still pending in this phase.
+
 ## Risks And Blockers
 - Risk: repo name collision or wrong visibility (public vs private for a marketing site) → confirm before `gh repo create`; default public.
 - Risk: `npm create astro` prompts block automation → use `--template minimal --typescript strict --install --git` non-interactive flags.
@@ -55,3 +63,4 @@ Create the GitHub repo for `AirminoWebsite/`, then stand up a clean Astro static
 
 ## Master Plan Sync Notes
 - Update master plan Phase 01 → In Progress/Complete, record actual domain placeholder + Astro version.
+- 2026-10-13: repo live at https://github.com/gbalabanli/AirminoWebsite (public, `main`); master plan M0 done.
