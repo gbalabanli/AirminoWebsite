@@ -1,0 +1,65 @@
+/* Button system + CTA helpers, ported verbatim from docs/design/index.html.
+   Global (not scoped) so all pages and components share one definition. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 10px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: 0.16s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(59, 91, 255, 0.3);
+}
+.btn-primary:hover {
+  background: #2e4ce8;
+  transform: translateY(-1px);
+}
+.btn-ghost {
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--line);
+}
+.btn-ghost:hover {
+  border-color: #c9d0e4;
+  background: var(--paper-2);
+}
+.btn-dark {
+  background: var(--ink);
+  color: #fff;
+}
+.btn-dark:hover {
+  background: var(--ink-3);
+}
+.btn-sm {
+  padding: 8px 15px;
+  font-size: 13.5px;
+}
+.btn-lg {
+  padding: 14px 26px;
+  font-size: 15.5px;
+}
+
+.cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.micro {
+  font-size: 13px;
+  color: var(--muted-2);
+  font-family: var(--mono);
+  letter-spacing: -0.01em;
+}

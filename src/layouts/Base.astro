@@ -1,5 +1,7 @@
 ---
 import '../styles/tokens.css';
+import '../styles/buttons.css';
+import '../styles/sections.css';
 
 interface Props {
   title: string;
@@ -106,20 +108,7 @@ const brandMark = brandName.charAt(0).toUpperCase();
     align-items: center;
     gap: 14px;
   }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 15px;
-    border-radius: 10px;
-    font-size: 13.5px;
-    font-weight: 600;
-    border: 1px solid transparent;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-  }
+  /* Note: .btn styles come from the global buttons.css (single definition). */
   footer {
     background: var(--ink-2);
     color: #7c87a3;

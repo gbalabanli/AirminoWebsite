@@ -1,0 +1,116 @@
+---
+/* Static API transcript. Note: .term-body uses white-space:pre so the
+   transcript renders as monospaced lines (the single-file prototype relied
+   on source newlines without it, which collapses in HTML). */
+---
+
+<div class="terminal">
+  <div class="term-bar">
+    <i></i><i></i><i></i>
+    <span class="term-title">POST /v1/decide — production</span>
+  </div>
+<div class="term-body"><span class="req">POST</span> /v1/decide
+{`{`}
+  <span class="key">"decision"</span>: <span class="str">"fraud_review"</span>,
+  <span class="key">"options"</span>: [<span class="str">"approve"</span>, <span class="str">"hold"</span>, <span class="str">"decline"</span>],
+  <span class="key">"context"</span>: {`{`}
+    <span class="key">"amount"</span>: <span class="num">4820.00</span>,
+    <span class="key">"velocity_1h"</span>: <span class="num">7</span>,
+    <span class="key">"geo_mismatch"</span>: <span class="num">true</span>,
+    <span class="key">"account_age_days"</span>: <span class="num">3</span>
+  {`}`}
+{`}`}
+
+<span class="ok">200 OK</span> · <span class="num">88</span>ms
+{`{`}
+  <span class="key">"choice"</span>: <span class="str">"hold"</span>,
+  <span class="key">"confidence"</span>: <span class="num">0.94</span>,
+  <span class="key">"calibrated"</span>: <span class="num">true</span>,
+  <span class="key">"rationale_code"</span>: <span class="str">"VELOCITY_ANOMALY"</span>,
+  <span class="key">"escalate"</span>: <span class="num">true</span>
+{`}`}
+<span class="dim">// schema-valid · no retraining required</span>
+<span class="cursor"></span></div>
+</div>
+
+<style>
+  .terminal {
+    background: var(--ink);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      0 24px 60px -18px rgba(10, 14, 26, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+    font-family: var(--mono);
+    font-size: 12.4px;
+    line-height: 1.75;
+  }
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 14px;
+    background: var(--ink-2);
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .term-bar i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: block;
+  }
+  .term-bar i:nth-child(1) {
+    background: #ff5f57;
+  }
+  .term-bar i:nth-child(2) {
+    background: #febc2e;
+  }
+  .term-bar i:nth-child(3) {
+    background: #28c840;
+  }
+  .term-title {
+    margin-left: 8px;
+    color: #6b7794;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+  .term-body {
+    padding: 18px 20px 22px;
+    color: #c6cee4;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .term-body .req {
+    color: #7a8cff;
+    font-weight: 600;
+  }
+  .term-body .key {
+    color: #8fe3c8;
+  }
+  .term-body .str {
+    color: #ffd08a;
+  }
+  .term-body .num {
+    color: #ff9e7d;
+  }
+  .term-body .ok {
+    color: #00c896;
+    font-weight: 600;
+  }
+  .term-body .dim {
+    color: #5a6685;
+  }
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 13px;
+    background: #7a8cff;
+    vertical-align: -2px;
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+</style>

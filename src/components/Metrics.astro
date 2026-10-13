@@ -1,0 +1,79 @@
+---
+---
+
+<section class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">By the numbers</div>
+      <h2>Built for the throughput your ops team actually needs.</h2>
+      <p>Verdict returns a single calibrated choice from a set you define at request time — never free-form text.</p>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <span class="val a">90ms</span>
+        <div class="lbl">p50 latency. p99 holds at <b>140ms</b> under sustained load.</div>
+      </div>
+      <div class="metric">
+        <span class="val m">$0.04</span>
+        <div class="lbl">Per 1,000 decisions. Volume tiers down to $0.018.</div>
+      </div>
+      <div class="metric">
+        <span class="val a">100%</span>
+        <div class="lbl">Schema-valid outputs. Zero parse failures, zero retries.</div>
+      </div>
+      <div class="metric">
+        <span class="val m">0</span>
+        <div class="lbl">Retraining cycles required to add a new option or rule.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .metric {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 22px;
+    transition: 0.18s;
+  }
+  .metric:hover {
+    border-color: #c9d0e4;
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+  .metric .val {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    font-family: var(--mono);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .metric .val.a {
+    color: var(--accent);
+  }
+  .metric .val.m {
+    color: var(--mint);
+  }
+  .metric .lbl {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  @media (max-width: 980px) {
+    .metrics {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .metrics {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

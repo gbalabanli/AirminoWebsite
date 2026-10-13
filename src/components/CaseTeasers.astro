@@ -1,0 +1,102 @@
+---
+/* First card links to the Ledgerline case study (Phase 03). The other two
+   teasers keep prototype copy but are non-interactive until their case pages
+   exist — the prototype's alert() popups are intentionally not ported. */
+---
+
+<section class="band alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Proof</div>
+      <h2>What it looks like in production.</h2>
+    </div>
+    <div class="cases">
+      <a class="case-card" href="/case-studies/ledgerline/">
+        <div class="co">Ledgerline · Payments</div>
+        <h4>Fraud review time cut from 4 hours to 90 seconds</h4>
+        <div class="big">-62%</div>
+        <div class="big-lbl">false positives blocking good customers</div>
+        <div class="more">Read the case study →</div>
+      </a>
+      <div class="case-card">
+        <div class="co">Meridian Health · Claims</div>
+        <h4>Auto-adjudicating 340k claims a month without new rules</h4>
+        <div class="big">11×</div>
+        <div class="big-lbl">throughput per claims analyst</div>
+        <div class="more">Read the case study →</div>
+      </div>
+      <div class="case-card">
+        <div class="co">Byteline · Support</div>
+        <h4>Ticket routing that adapts when the taxonomy changes</h4>
+        <div class="big">$0.031</div>
+        <div class="big-lbl">cost per routed ticket, all-in</div>
+        <div class="more">Read the case study →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cases {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .case-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    transition: 0.18s;
+  }
+  a.case-card {
+    cursor: pointer;
+  }
+  a.case-card:hover {
+    border-color: #c9d0e4;
+    box-shadow: var(--shadow);
+    transform: translateY(-3px);
+  }
+  .case-card .co {
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    font-weight: 660;
+    margin-bottom: 14px;
+    font-family: var(--mono);
+  }
+  .case-card h4 {
+    font-size: 16.5px;
+    line-height: 1.35;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+    font-weight: 680;
+  }
+  .case-card .big {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--mint);
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+  }
+  .case-card .big-lbl {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .case-card .more {
+    margin-top: auto;
+    font-size: 13.5px;
+    font-weight: 620;
+    color: var(--accent);
+  }
+  @media (max-width: 980px) {
+    .cases {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

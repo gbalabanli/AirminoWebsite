@@ -1,0 +1,33 @@
+/* Section shell shared by all content bands, ported from docs/design/index.html. */
+
+section.band {
+  padding: 82px 0;
+  border-bottom: 1px solid var(--line);
+}
+section.band.alt {
+  background: var(--paper-2);
+}
+.sec-head {
+  max-width: 660px;
+  margin-bottom: 48px;
+}
+.sec-head h2 {
+  font-size: clamp(26px, 3vw, 38px);
+  margin-bottom: 14px;
+  letter-spacing: -0.032em;
+  line-height: 1.15;
+  font-weight: 680;
+}
+.sec-head p {
+  font-size: 16.5px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.kicker {
+  font-size: 12px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 680;
+  margin-bottom: 12px;
+}
