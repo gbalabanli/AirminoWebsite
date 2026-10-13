@@ -3,14 +3,15 @@
 ## Planning Metadata
 - Last Updated: 2026-10-13
 - Planning Horizon: GitHub repo → Astro static launch on custom domain
-- Overall Status: In Progress (M0 done: repo live; no Astro code yet)
+- Overall Status: In Progress (M0+M1 done: repo live, scaffold builds; content ports pending)
 
 ## Project Goal
 Ship Airmino's public website as a fast Astro static site, deployed from GitHub to a custom domain, positioning Airmino as Decision Infrastructure for automated business decisions (Jev-like). The site must enable self-serve evaluation: proof-first hero, 3-depth landing, objection handling, case-study proof, and ROI calculator — forming the Intent Activation Loop (brand → self-serve → proof → intent signal).
 
 ## Current Status Snapshot
 - Complete: Single-file Verdict-branded prototype (`docs/design/index.html`) with 3 logical pages in one HTML file: Home/Platform, Ledgerline case study, ROI calculator (vanilla JS, ~no build).
-- Active: Phase 01 In Progress. Repo live: https://github.com/gbalabanli/AirminoWebsite (public, `main`, baseline `b1b9adc` pushed). Working tree clean, tracking `origin/main`.
+- Active: Phase 01 Complete (Gate A passed). Repo live: https://github.com/gbalabanli/AirminoWebsite (public, `main`, scaffold `2c4e37d` pushed). Working tree clean, tracking `origin/main`.
+- Next: Phase 02 (Home port) and Phase 03 (case + calculator) — unblocked, may run in parallel.
 - Not started: Astro scaffold, Airmino rebrand, GitHub deploy, custom domain, content rewrite.
 
 ## Success Criteria
@@ -53,7 +54,7 @@ Split into 4 forward-only phases: Foundation (repo + scaffold + deploy skeleton)
 ## Phase Index
 | Phase | Status | Goal | Depends On | Document |
 | --- | --- | --- | --- | --- |
-| Phase 01 | In Progress | GitHub repo + Astro scaffold + Pages skeleton | None | [phase-01-foundation.md](phases/phase-01-foundation.md) |
+| Phase 01 | Complete | GitHub repo + Astro scaffold + Pages skeleton | None | [phase-01-foundation.md](phases/phase-01-foundation.md) |
 | Phase 02 | Planned | Home/Platform page port with 3-depth structure | Phase 01 | [phase-02-home-platform.md](phases/phase-02-home-platform.md) |
 | Phase 03 | Planned | Case-study page + interactive ROI calculator | Phase 01 | [phase-03-case-calculator.md](phases/phase-03-case-calculator.md) |
 | Phase 04 | Planned | Airmino copy rewrite, SEO/analytics, domain launch | Phase 02, Phase 03 | [phase-04-content-launch.md](phases/phase-04-content-launch.md) |
@@ -99,3 +100,4 @@ Split into 4 forward-only phases: Foundation (repo + scaffold + deploy skeleton)
 - 2026-10-13: Initial plan created (split layout). Scope locked: Astro static + GitHub custom domain + light Airmino restyle + content rewrite.
 - 2026-10-13: Added GitHub repo creation to Phase 01 (git init + `gh repo create` + push + Pages); M0 added; repo default `gbalabanli/AirminoWebsite` (public).
 - 2026-10-13: M0 done — repo https://github.com/gbalabanli/AirminoWebsite live (public, `main`, baseline `b1b9adc`); Phase 01 → In Progress.
+- 2026-10-13: M1 done, Gate A passed — Astro 7.3.8 scaffold `2c4e37d` (build green, preview HTTP 200, workflow pushed); Phase 01 → Complete.
