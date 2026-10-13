@@ -1,0 +1,312 @@
+---
+import Base from '../../layouts/Base.astro';
+import StatGrid from '../../components/StatGrid.astro';
+import BeforeAfterTable from '../../components/BeforeAfterTable.astro';
+import CaseSidebar from '../../components/CaseSidebar.astro';
+
+/* Breadcrumb "Case studies" renders as plain text — there is no listing
+   page yet, and dead links are intentionally not ported. */
+---
+
+<Base title="How Ledgerline cut fraud review time from 4 hours to 90 seconds">
+  <div class="cs-hero">
+    <div class="wrap">
+      <div class="crumb">
+        <a href="/">Platform</a>
+        <span class="sep">/</span>
+        <span>Case studies</span>
+        <span class="sep">/</span>
+        <span style="color:#fff">Ledgerline</span>
+      </div>
+      <h1>How Ledgerline cut fraud review time from <em>4 hours to 90 seconds</em></h1>
+      <div class="cs-kpis">
+        <div class="cs-kpi"><span class="v g">-62%</span><span class="l">False positives</span></div>
+        <div class="cs-kpi"><span class="v">90s</span><span class="l">Median resolution</span></div>
+        <div class="cs-kpi"><span class="v">$1.4M</span><span class="l">Recovered revenue / yr</span></div>
+        <div class="cs-kpi"><span class="v">2.1M</span><span class="l">Decisions / month</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-body">
+    <div class="wrap cs-layout">
+      <article>
+        <p class="summary">
+          Ledgerline, a payments processor handling <strong>2.1 million monthly transactions</strong>,
+          was losing good customers to a fraud queue that took four hours to clear.
+          After a six-week evaluation, they replaced their rules engine and a prompted-LLM
+          pilot with Verdict — cutting median review time to <strong>90 seconds</strong>,
+          reducing false positives by <strong>62%</strong>, and recovering
+          <strong>$1.4M in annual revenue</strong> that had been leaking to over-blocking.
+        </p>
+
+        <blockquote class="pull">
+          <p>“We weren't choosing a model. We were choosing whether our analysts would still have a job in two years — and whether our good customers would still be here.”</p>
+          <cite><b>Dana Whitfield</b> · VP Risk Operations, Ledgerline</cite>
+        </blockquote>
+
+        <div class="cs-section">
+          <span class="lbl">01 — Situation</span>
+          <h3>A queue that grew faster than the team</h3>
+          <p>
+            Ledgerline's risk team had 14 analysts working a queue of roughly 9,000 flagged
+            transactions per day. Each review took a median of four hours end-to-end, and
+            the backlog meant most cases were resolved long after the customer had already
+            abandoned the purchase.
+          </p>
+          <p>
+            The cost wasn't just operational. Roughly one in five holds turned out to be a
+            legitimate customer — and Ledgerline's own data showed that a customer who
+            experiences a fraud hold is <b>3.4× more likely</b> to churn within 90 days.
+          </p>
+        </div>
+
+        <div class="cs-section">
+          <span class="lbl">02 — Evaluation</span>
+          <h3>Four options, three criteria that mattered</h3>
+          <p>
+            The team spent six weeks evaluating four approaches. They were explicit about
+            what would make them walk away:
+          </p>
+          <ul>
+            <li><b>p99 latency under 200ms.</b> Anything slower couldn't sit inline in the authorization path — it would have to stay async, which defeats the purpose.</li>
+            <li><b>No hallucinated output formats.</b> The downstream system parses a strict schema. A single malformed response at 3am pages an on-call engineer.</li>
+            <li><b>Adding a new decline reason without retraining.</b> Their fraud taxonomy changed roughly every six weeks. A model that needed a training cycle for each change was a non-starter.</li>
+          </ul>
+          <p>
+            A prompted LLM passed the flexibility test but failed on latency (p99 ~6.4s) and
+            output reliability (71% parseable in their harness). Expanding the rules engine
+            passed latency but failed the adaptability test — the rule tree was already
+            4,000 branches deep. A fine-tuned classifier passed latency and reliability but
+            required a retraining cycle for every taxonomy change.
+          </p>
+          <p>
+            Verdict was the only option that cleared all three criteria in the pilot.
+          </p>
+        </div>
+
+        <div class="cs-section">
+          <span class="lbl">03 — Result</span>
+          <h3>Ninety seconds, and a queue that clears itself</h3>
+          <p>
+            Ledgerline deployed Verdict inside their own VPC, inline in the authorization
+            path. Low-confidence decisions still escalate to a human — but that's now
+            roughly <b>8% of volume</b> instead of 100%.
+          </p>
+
+          <StatGrid items={[
+            { v: '-62%', l: 'False positives in the first 90 days' },
+            { v: '90s', l: 'Median time to resolution' },
+            { v: '8%', l: 'Volume still escalated to humans' },
+          ]} />
+
+          <p>
+            The team also stopped shipping rule changes through engineering. Risk analysts
+            now modify the options array directly through a config surface — the fraud
+            taxonomy has changed five times since launch with no model retraining and no
+            deployment.
+          </p>
+
+          <BeforeAfterTable
+            headers={['Metric', 'Before', 'After']}
+            rows={[
+              { name: 'Median resolution time', before: '4h 12m', after: '1m 30s' },
+              { name: 'False positive rate', before: '19.4%', after: '7.4%' },
+              { name: 'Cost per decision', before: '$0.86', after: '$0.04' },
+              { name: 'Taxonomy change cycle', before: '6 weeks', after: 'Same day' },
+              { name: 'Analyst headcount on queue', before: '14', after: '4' },
+              { name: 'p99 decision latency', before: '6,400ms', after: '140ms' },
+            ]}
+          />
+
+          <p>
+            The 10 analysts who moved off the queue were redeployed to complex case
+            investigation — work that had been perpetually deprioritized. Ledgerline
+            reports that the team now closes roughly <b>3× more high-value investigations</b>
+            per quarter than before the migration.
+          </p>
+        </div>
+
+        <div class="cs-section">
+          <span class="lbl">Next</span>
+          <h3>See how this works for fraud triage</h3>
+          <p style="margin-bottom:22px">
+            Bring a sample of your own flagged transactions and define your option set.
+            You'll get a calibration report before you talk to anyone.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="/roi-calculator/">Estimate your savings →</a>
+            <a class="btn btn-ghost" href="/#architecture">Read the architecture paper</a>
+          </div>
+        </div>
+      </article>
+
+      <CaseSidebar />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .cs-hero {
+    background: var(--ink);
+    color: #fff;
+    padding: 70px 0 74px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cs-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(800px 400px at 82% 0%, rgba(0, 200, 150, 0.14), transparent 62%);
+  }
+  .cs-hero .wrap {
+    position: relative;
+  }
+  .cs-hero h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -0.035em;
+    max-width: 880px;
+    margin-bottom: 34px;
+    line-height: 1.12;
+    font-weight: 680;
+  }
+  .cs-hero h1 em {
+    font-style: normal;
+    color: var(--mint);
+  }
+  .cs-kpis {
+    display: flex;
+    gap: 52px;
+    flex-wrap: wrap;
+    padding-top: 30px;
+    border-top: 1px solid var(--line-dark);
+  }
+  .cs-kpi .v {
+    font-family: var(--mono);
+    font-size: 30px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.035em;
+    display: block;
+  }
+  .cs-kpi .v.g {
+    color: var(--mint);
+  }
+  .cs-kpi .l {
+    font-size: 12.5px;
+    color: #7c87a3;
+    margin-top: 5px;
+    letter-spacing: 0.02em;
+  }
+  .cs-body {
+    padding: 64px 0;
+  }
+  .cs-layout {
+    display: grid;
+    grid-template-columns: 1fr 296px;
+    gap: 64px;
+    align-items: start;
+  }
+  .summary {
+    font-size: 19px;
+    line-height: 1.66;
+    color: var(--ink);
+    font-weight: 480;
+    padding: 26px 0 34px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+    letter-spacing: -0.012em;
+  }
+  .summary strong {
+    font-weight: 680;
+  }
+  blockquote.pull {
+    border-left: 3px solid var(--accent);
+    padding: 6px 0 6px 26px;
+    margin: 0 0 44px;
+  }
+  blockquote.pull p {
+    font-size: 20px;
+    line-height: 1.55;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  blockquote.pull cite {
+    font-style: normal;
+    font-size: 13.5px;
+    color: var(--muted);
+    display: block;
+    font-weight: 560;
+  }
+  blockquote.pull cite b {
+    color: var(--ink);
+    font-weight: 660;
+  }
+  .cs-section {
+    margin-bottom: 52px;
+  }
+  .cs-section .lbl {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .cs-section h3 {
+    font-size: 24px;
+    margin-bottom: 18px;
+    letter-spacing: -0.028em;
+    line-height: 1.15;
+    font-weight: 680;
+  }
+  .cs-section p {
+    font-size: 16px;
+    color: #39415a;
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+  .cs-section p:last-child {
+    margin-bottom: 0;
+  }
+  .cs-section ul {
+    margin: 0 0 16px 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .cs-section ul li {
+    font-size: 15.5px;
+    color: #39415a;
+    line-height: 1.7;
+    padding-left: 26px;
+    position: relative;
+    margin-bottom: 11px;
+  }
+  .cs-section ul li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+    font-family: var(--mono);
+  }
+  @media (max-width: 980px) {
+    .cs-layout {
+      grid-template-columns: 1fr;
+      gap: 44px;
+    }
+  }
+  @media (max-width: 600px) {
+    .cs-kpis {
+      gap: 30px;
+    }
+    .cs-hero h1 {
+      font-size: 26px;
+    }
+  }
+</style>

@@ -1,0 +1,89 @@
+---
+interface Row {
+  name: string;
+  before: string;
+  after: string;
+  /** Optional DOM ids for live-updating cells (used by the ROI calculator). */
+  beforeId?: string;
+  afterId?: string;
+}
+interface Props {
+  headers: [string, string, string];
+  rows: Row[];
+}
+const { headers, rows } = Astro.props;
+---
+
+<div class="ba">
+  <table>
+    <thead>
+      <tr>
+        <th>{headers[0]}</th>
+        <th>{headers[1]}</th>
+        <th>{headers[2]}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <td class="metric-name">{r.name}</td>
+          <td class="before" id={r.beforeId}>{r.before}</td>
+          <td class="after" id={r.afterId}>{r.after}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .ba {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 30px 0;
+  }
+  .ba table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .ba thead th {
+    background: var(--paper-2);
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 640;
+  }
+  .ba thead th:last-child {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .ba td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  .ba tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .ba td.metric-name {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .ba td.before {
+    font-family: var(--mono);
+    color: var(--muted);
+    font-size: 13.4px;
+  }
+  .ba td.after {
+    font-family: var(--mono);
+    color: var(--ink);
+    font-weight: 660;
+    font-size: 13.4px;
+    background: var(--accent-soft);
+  }
+</style>

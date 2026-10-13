@@ -31,3 +31,20 @@ section.band.alt {
   font-weight: 680;
   margin-bottom: 12px;
 }
+
+/* Breadcrumb used on case-study and calculator heroes. */
+.crumb {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #6b7794;
+  margin-bottom: 26px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.crumb a:hover {
+  color: #fff;
+}
+.crumb .sep {
+  color: #33405e;
+}

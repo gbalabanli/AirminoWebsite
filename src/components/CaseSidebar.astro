@@ -1,0 +1,103 @@
+---
+/* Case-study sidebar: company snapshot, business-case CTA, more cases.
+   The "more cases" rows are non-interactive until those case pages exist
+   (the prototype's dead cursor:pointer rows are intentionally not ported). */
+---
+
+<aside class="side">
+  <div class="side-card">
+    <h5>Company snapshot</h5>
+    <div class="side-row"><span class="k">Company</span><span class="v">Ledgerline</span></div>
+    <div class="side-row"><span class="k">Industry</span><span class="v">Payments</span></div>
+    <div class="side-row"><span class="k">Employees</span><span class="v">400</span></div>
+    <div class="side-row"><span class="k">Decision volume</span><span class="v">2.1M / mo</span></div>
+    <div class="side-row"><span class="k">Use case</span><span class="v">Fraud triage</span></div>
+    <div class="side-row"><span class="k">Stack</span><span class="v">Go · Kafka · Postgres</span></div>
+    <div class="side-row"><span class="k">Deployment</span><span class="v">Self-hosted VPC</span></div>
+    <div class="side-row"><span class="k">Time to launch</span><span class="v">6 weeks</span></div>
+  </div>
+
+  <div class="side-card side-cta">
+    <h5>Build your business case</h5>
+    <p>Plug in your decision volume and current cost per decision to see projected savings.</p>
+    <a class="btn btn-primary" href="/roi-calculator/">Open calculator</a>
+  </div>
+
+  <div class="side-card">
+    <h5>More case studies</h5>
+    <div class="side-row">
+      <span class="k">Meridian Health</span><span class="v">11× →</span>
+    </div>
+    <div class="side-row">
+      <span class="k">Byteline</span><span class="v">$0.031 →</span>
+    </div>
+    <div class="side-row">
+      <span class="k">Arcadia Logistics</span><span class="v">-44% →</span>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .side {
+    position: sticky;
+    top: 90px;
+  }
+  .side-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 18px;
+  }
+  .side-card h5 {
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 18px;
+    font-weight: 680;
+  }
+  .side-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+  }
+  .side-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .side-row .k {
+    color: var(--muted);
+  }
+  .side-row .v {
+    font-weight: 600;
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 12.8px;
+  }
+  .side-cta {
+    background: var(--ink);
+    color: #fff;
+    border: none;
+  }
+  .side-cta h5 {
+    color: #7c87a3;
+  }
+  .side-cta p {
+    font-size: 14px;
+    color: #b4bdd4;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+  .side-cta .btn {
+    width: 100%;
+  }
+  @media (max-width: 980px) {
+    .side {
+      position: static;
+    }
+  }
+</style>
