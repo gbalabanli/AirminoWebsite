@@ -1,0 +1,27 @@
+---
+/* Intent-signal analytics hook. Emits nothing unless PUBLIC_ANALYTICS_DOMAIN
+   is set at build time — unconfigured builds stay script-free.
+   When configured: loads Plausible (tagged events) and forwards every
+   [data-event] click as a Plausible custom event plus an
+   'airmino:intent' CustomEvent for any other listener.
+   Event catalogue: docs/analytics.md */
+const domain = import.meta.env.PUBLIC_ANALYTICS_DOMAIN;
+const src =
+  import.meta.env.PUBLIC_PLAUSIBLE_SRC ??
+  'https://plausible.io/js/script.tagged-events.js';
+---
+
+{domain && (
+  <>
+    <script async defer data-domain={domain} src={src}></script>
+    <script is:inline>
+      document.addEventListener('click', function (e) {
+        var t = e.target && e.target.closest ? e.target.closest('[data-event]') : null;
+        if (!t) return;
+        var name = t.getAttribute('data-event');
+        if (window.plausible) window.plausible(name);
+        document.dispatchEvent(new CustomEvent('airmino:intent', { detail: { event: name } }));
+      });
+    </script>
+  </>
+)}

@@ -34,8 +34,8 @@ import BeforeAfterTable from './BeforeAfterTable.astro';
     </div>
 
     <div class="field">
-      <label for="rate">Verdict rate per 1,000 decisions</label>
-      <input type="range" id="rateRange" min="0.01" max="0.20" step="0.005" value="0.04" aria-label="Verdict rate per 1,000 decisions (slider)" />
+      <label for="rate">Airmino rate per 1,000 decisions</label>
+      <input type="range" id="rateRange" min="0.01" max="0.20" step="0.005" value="0.04" aria-label="Airmino rate per 1,000 decisions (slider)" />
       <div class="num-input">
         <span>$</span>
         <input type="number" id="rate" value="0.04" min="0.01" step="0.005" />
@@ -69,7 +69,7 @@ import BeforeAfterTable from './BeforeAfterTable.astro';
       <div class="result">
         <div class="rl">Monthly savings</div>
         <div class="rv" id="monthlySavings">$202,500</div>
-        <div class="rs" id="monthlySub">Net of Verdict spend</div>
+        <div class="rs" id="monthlySub">Net of Airmino spend</div>
       </div>
 
       <div class="result">
@@ -94,7 +94,7 @@ import BeforeAfterTable from './BeforeAfterTable.astro';
 
         <div class="bar-row">
           <div class="bl">
-            <span>With Verdict</span>
+            <span>With Airmino</span>
             <span class="bv new" id="barNewLabel">$10,000 / mo</span>
           </div>
           <div class="bar"><i class="new" id="barNew" style="width:5%"></i></div>
@@ -103,7 +103,7 @@ import BeforeAfterTable from './BeforeAfterTable.astro';
 
       <div class="calc-ba">
         <BeforeAfterTable
-          headers={['Line item', 'Current', 'With Verdict']}
+          headers={['Line item', 'Current', 'With Airmino']}
           rows={[
             { name: 'Monthly decision cost', before: '$212,500', after: '$10,000', beforeId: 'tblOld', afterId: 'tblNew' },
             { name: 'Annual decision cost', before: '$2,550,000', after: '$120,000', beforeId: 'tblOldYr', afterId: 'tblNewYr' },
@@ -159,7 +159,7 @@ function calc() {
   document.getElementById('monthlySavings').textContent =
     monthlySave >= 0 ? compact(monthlySave) : '-' + compact(Math.abs(monthlySave));
   document.getElementById('monthlySub').textContent =
-    'Net of ' + compact(newMonthly) + ' in Verdict spend';
+    'Net of ' + compact(newMonthly) + ' in Airmino spend';
 
   document.getElementById('reduction').textContent =
     (reduction >= 0 ? reduction.toFixed(1) : '0.0') + '%';

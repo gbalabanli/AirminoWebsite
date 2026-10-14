@@ -2,20 +2,26 @@
 import '../styles/tokens.css';
 import '../styles/buttons.css';
 import '../styles/sections.css';
+import Analytics from '../components/Analytics.astro';
 
 interface Props {
   title: string;
   description?: string;
-  /** Prototype parity default; Phase 04 swaps to "Airmino". */
+  /** Canonical path of this page (default '/'). Joined with SITE for canonical + og:url. */
+  canonicalPath?: string;
   brandName?: string;
 }
+
+const SITE = 'https://airmino.com';
 
 const {
   title,
   description = 'Decision infrastructure for automated operations.',
-  brandName = 'Verdict',
+  canonicalPath = '/',
+  brandName = 'Airmino',
 } = Astro.props;
 const brandMark = brandName.charAt(0).toUpperCase();
+const canonical = SITE + canonicalPath;
 ---
 
 <!doctype html>
@@ -26,6 +32,15 @@ const brandMark = brandName.charAt(0).toUpperCase();
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Airmino" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
   </head>
   <body>
     <header class="nav">
@@ -50,10 +65,11 @@ const brandMark = brandName.charAt(0).toUpperCase();
 
     <footer>
       <div class="wrap foot-bottom">
-        <span>© 2025 {brandName} Labs, Inc. — Prototype, not a live product.</span>
+        <span>© 2025 Airmino, Inc.</span>
         <span>SOC 2 Type II · GDPR · VPC &amp; self-hosted</span>
       </div>
     </footer>
+    <Analytics />
   </body>
 </html>
 

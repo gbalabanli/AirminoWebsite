@@ -8,7 +8,7 @@ import CaseSidebar from '../../components/CaseSidebar.astro';
    page yet, and dead links are intentionally not ported. */
 ---
 
-<Base title="How Ledgerline cut fraud review time from 4 hours to 90 seconds">
+<Base title="How Ledgerline cut fraud review time from 4 hours to 90 seconds" canonicalPath="/case-studies/ledgerline/">
   <div class="cs-hero">
     <div class="wrap">
       <div class="crumb">
@@ -35,7 +35,7 @@ import CaseSidebar from '../../components/CaseSidebar.astro';
           Ledgerline, a payments processor handling <strong>2.1 million monthly transactions</strong>,
           was losing good customers to a fraud queue that took four hours to clear.
           After a six-week evaluation, they replaced their rules engine and a prompted-LLM
-          pilot with Verdict — cutting median review time to <strong>90 seconds</strong>,
+          pilot with Airmino — cutting median review time to <strong>90 seconds</strong>,
           reducing false positives by <strong>62%</strong>, and recovering
           <strong>$1.4M in annual revenue</strong> that had been leaking to over-blocking.
         </p>
@@ -81,7 +81,7 @@ import CaseSidebar from '../../components/CaseSidebar.astro';
             required a retraining cycle for every taxonomy change.
           </p>
           <p>
-            Verdict was the only option that cleared all three criteria in the pilot.
+            Airmino was the only option that cleared all three criteria in the pilot.
           </p>
         </div>
 
@@ -89,7 +89,7 @@ import CaseSidebar from '../../components/CaseSidebar.astro';
           <span class="lbl">03 — Result</span>
           <h3>Ninety seconds, and a queue that clears itself</h3>
           <p>
-            Ledgerline deployed Verdict inside their own VPC, inline in the authorization
+            Ledgerline deployed Airmino inside their own VPC, inline in the authorization
             path. Low-confidence decisions still escalate to a human — but that's now
             roughly <b>8% of volume</b> instead of 100%.
           </p>
@@ -135,8 +135,8 @@ import CaseSidebar from '../../components/CaseSidebar.astro';
             You'll get a calibration report before you talk to anyone.
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="/roi-calculator/">Estimate your savings →</a>
-            <a class="btn btn-ghost" href="/#architecture">Read the architecture paper</a>
+            <a class="btn btn-primary" href="/roi-calculator/" data-event="cta-estimate">Estimate your savings →</a>
+            <a class="btn btn-ghost" href="/#architecture" data-event="cta-architecture">Read the architecture paper</a>
           </div>
         </div>
       </article>

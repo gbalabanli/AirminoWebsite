@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 // Static output for GitHub Pages + custom domain (https://airmino.com).
 // `base: '/'` is correct for both the apex domain and the
@@ -8,4 +9,5 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://airmino.com',
   output: 'static',
+  integrations: [sitemap()],
 });

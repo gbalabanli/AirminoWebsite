@@ -11,7 +11,7 @@
     <div class="faq">
       <div class="q">
         <h4>How is this different from a classifier?</h4>
-        <p>A classifier is trained on a fixed label set. Verdict takes <code>options[]</code> as a request parameter, so the same model handles "approve/hold/decline" at 9am and "tier_1/tier_2/tier_3" at 9:05. No retraining, no redeploy.</p>
+        <p>A classifier is trained on a fixed label set. Airmino takes <code>options[]</code> as a request parameter, so the same model handles "approve/hold/decline" at 9am and "tier_1/tier_2/tier_3" at 9:05. No retraining, no redeploy.</p>
       </div>
       <div class="q">
         <h4>What's the accuracy versus an LLM?</h4>
@@ -23,7 +23,11 @@
       </div>
       <div class="q">
         <h4>What's the failure mode?</h4>
-        <p>Verdict can only return one of the options you supplied, in a fixed schema. It cannot invent a category or emit free text. When confidence falls below your threshold, it returns <code>escalate: true</code> instead of guessing.</p>
+        <p>Airmino can only return one of the options you supplied, in a fixed schema. It cannot invent a category or emit free text. When confidence falls below your threshold, it returns <code>escalate: true</code> instead of guessing.</p>
+      </div>
+      <div class="q">
+        <h4>Which workflows does this fit?</h4>
+        <p>Anywhere a system must pick one option from a set you define: fraud triage, support ticket routing, loan pre-qualification, offer selection, content-moderation appeal. If the decision fits in a request payload and the answer fits a schema, it fits Airmino.</p>
       </div>
     </div>
   </div>
