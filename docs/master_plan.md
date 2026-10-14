@@ -104,3 +104,4 @@ Split into 4 forward-only phases: Foundation (repo + scaffold + deploy skeleton)
 - 2026-10-13: M2 done — Home port `428493f` (9 components, 25-marker parity OK, 0 script tags); Phase 02 → Complete. Gate B pending Phase 03.
 - 2026-10-13: M3 done, Gate B passed — case + calculator `3bf9306` (live browser = node reference; null-id crash caught and fixed); Phase 03 → Complete.
 - 2026-10-14: M4 site work done — rebrand `2652534` (0 verdict hits, SEO/sitemap/analytics), CI fixed (Pages enabled, npm-install step) and deploy green; live on `github.io`. Phase 04 → Complete* (*DNS cutover + Lighthouse left to you).
+- 2026-10-14: Fixed live-subpath rendering (base `/AirminoWebsite/` + `u()` links; verified all-200 + content match live); cutover = set base to `/` + redeploy.

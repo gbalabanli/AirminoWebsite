@@ -47,7 +47,8 @@ Turn the Verdict prototype into Airmino's launch site: full rename + intent-loop
 - Launch state: Pages enabled (workflow build), deploy run **success** (`6fcb6bb`), live at `https://gbalabanli.github.io/AirminoWebsite/` (HTTP 200, full Airmino homepage). Fixed two CI issues en route: Pages-not-enabled `configure-pages` failure → enabled via API; `npm ci` Linux lock drift (`@emnapi/*`) → `npm install` step.
 
 ### Known Gaps / Deferred Items
-- **DNS (your action, ~10 min):** point `airmino.com` at GitHub Pages (apex A records `185.199.108/109/110/111.153` or CNAME `www` → `gbalabanli.github.io`), then HTTPS enforces automatically. Until then the `github.io` URL serves unstyled (root-absolute asset paths assume the apex domain) — expected, documented.
+- **DNS (your action, ~10 min):** point `airmino.com` at GitHub Pages (apex A records `185.199.108/109/110/111.153` or CNAME `www` → `gbalabanli.github.io`), then HTTPS enforces automatically.
+- **Interim base strategy (fixed live-subpath rendering):** root-absolute assets 404'd on `github.io/AirminoWebsite/`, so `base` is `/AirminoWebsite/` + all handwritten links go through `u()` (`src/lib/site.ts`). **At DNS cutover: set `base` back to `'/'` and redeploy — nothing else changes.** Sitemap/canonical interim-point at `airmino.com[/AirminoWebsite/…]` and self-correct at cutover.
 - **Lighthouse score unmeasured** (no runner in this env); payload is 21KB HTML + 11KB CSS max, zero blocking JS on `/` — run it post-DNS, target ≥90.
 
 ## Risks And Blockers
