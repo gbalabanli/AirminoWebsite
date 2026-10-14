@@ -1,8 +1,8 @@
 # Phase 04: Airmino Content + Launch
 
 ## Phase Metadata
-- Status: Planned
-- Last Updated: 2026-10-13
+- Status: Complete (site work; custom-domain cutover awaits DNS — external)
+- Last Updated: 2026-10-14
 - Duration Target: 1–2 sessions
 - Related Master Plan: [../master_plan.md](../master_plan.md)
 
@@ -36,12 +36,27 @@ Turn the Verdict prototype into Airmino's launch site: full rename + intent-loop
 - Custom domain serves site over HTTPS; `github-pages` environment green.
 - Calculator defaults still correct after copy pass (no JS regression).
 
+## Progress Snapshot
+### Delivered So Far
+- Brand swap: 17 `Verdict` strings → `Airmino` across 8 files; `rg -i verdict src/ public/` = **0 hits**; footer `© 2025 Airmino, Inc.`; brand-mark `V`→`A` via prop default; ribbon never ported (gone by construction); palette kept (`#3B5BFF`/`#00C896`, no logo asset provided).
+- Entry points: new FAQ “Which workflows does this fit?” (fraud triage, support routing, loan pre-qual, offer selection, moderation appeal).
+- SEO: per-route `<title>`/meta/OG/canonical (`airmino.com`), `sitemap-index.xml` (3 routes), `robots.txt` + sitemap line, favicon, 404 with nav.
+- Analytics: `Analytics.astro` (zero output unless `PUBLIC_ANALYTICS_DOMAIN` set) + 8 `data-event` hooks; spec in `docs/analytics.md`.
+- Provenance: `docs/content-sources.md` marks every figure Assumption + records the prototype placeholder-vs-formula discrepancy.
+- Copy-diff (representative): hero title `Verdict`→`Airmino`; metrics/speeds/acts/FAQ/table headers same swap; calculator “Verdict rate”→“Airmino rate”, “in Verdict spend”→“in Airmino spend”, “With Verdict”→“With Airmino”; case “with Verdict”/“Verdict was the only option”→Airmino; formula JS untouched.
+- Launch state: Pages enabled (workflow build), deploy run **success** (`6fcb6bb`), live at `https://gbalabanli.github.io/AirminoWebsite/` (HTTP 200, full Airmino homepage). Fixed two CI issues en route: Pages-not-enabled `configure-pages` failure → enabled via API; `npm ci` Linux lock drift (`@emnapi/*`) → `npm install` step.
+
+### Known Gaps / Deferred Items
+- **DNS (your action, ~10 min):** point `airmino.com` at GitHub Pages (apex A records `185.199.108/109/110/111.153` or CNAME `www` → `gbalabanli.github.io`), then HTTPS enforces automatically. Until then the `github.io` URL serves unstyled (root-absolute asset paths assume the apex domain) — expected, documented.
+- **Lighthouse score unmeasured** (no runner in this env); payload is 21KB HTML + 11KB CSS max, zero blocking JS on `/` — run it post-DNS, target ≥90.
+
 ## Risks And Blockers
-- Risk: Placeholder benchmark numbers ship as fact → add `Assumption:` footnote or `docs/content-sources.md` marking unverified figures.
-- Risk: DNS propagation delay → keep `*.github.io` fallback live until cutover verified.
+- Risk (covered): placeholder numbers as fact → `docs/content-sources.md` ledger.
+- Blocker (external): DNS cutover + HTTPS verify — needs whoever controls the domain.
 
 ## Exit Criteria
 - Project complete: master plan Overall Status → Complete; repo is the source of truth for airmino domain.
 
 ## Master Plan Sync Notes
 - Update master plan: Phase 04 status, Overall Status, Success Criteria check-off, Change Log entry, domain + analytics decisions.
+- 2026-10-14: Phase 04 Complete except DNS cutover + Lighthouse measurement (both external). Gate C partially passed (Actions green, site live on `github.io`).
