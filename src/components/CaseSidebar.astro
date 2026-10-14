@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/site';
 /* Case-study sidebar: company snapshot, business-case CTA, more cases.
    The "more cases" rows are non-interactive until those case pages exist
    (the prototype's dead cursor:pointer rows are intentionally not ported). */
@@ -20,7 +21,7 @@
   <div class="side-card side-cta">
     <h5>Build your business case</h5>
     <p>Plug in your decision volume and current cost per decision to see projected savings.</p>
-    <a class="btn btn-primary" href="/roi-calculator/" data-event="cta-open-calculator">Open calculator</a>
+    <a class="btn btn-primary" href={u('/roi-calculator/')} data-event="cta-open-calculator">Open calculator</a>
   </div>
 
   <div class="side-card">

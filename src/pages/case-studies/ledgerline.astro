@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import StatGrid from '../../components/StatGrid.astro';
 import BeforeAfterTable from '../../components/BeforeAfterTable.astro';
 import CaseSidebar from '../../components/CaseSidebar.astro';
+import { u } from '../../lib/site';
 
 /* Breadcrumb "Case studies" renders as plain text — there is no listing
    page yet, and dead links are intentionally not ported. */
@@ -12,7 +13,7 @@ import CaseSidebar from '../../components/CaseSidebar.astro';
   <div class="cs-hero">
     <div class="wrap">
       <div class="crumb">
-        <a href="/">Platform</a>
+        <a href={u('/')}>Platform</a>
         <span class="sep">/</span>
         <span>Case studies</span>
         <span class="sep">/</span>
@@ -135,8 +136,8 @@ import CaseSidebar from '../../components/CaseSidebar.astro';
             You'll get a calibration report before you talk to anyone.
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="/roi-calculator/" data-event="cta-estimate">Estimate your savings →</a>
-            <a class="btn btn-ghost" href="/#architecture" data-event="cta-architecture">Read the architecture paper</a>
+            <a class="btn btn-primary" href={u('/roi-calculator/')} data-event="cta-estimate">Estimate your savings →</a>
+            <a class="btn btn-ghost" href={u('/#architecture')} data-event="cta-architecture">Read the architecture paper</a>
           </div>
         </div>
       </article>

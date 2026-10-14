@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/site';
 ---
 
 <section class="final" id="start">
@@ -7,7 +8,7 @@
     <p>No credit card, no sales call. Upload a sample, define your options, and see the calibration report in under ten minutes.</p>
     <div class="cta-row">
       <a class="btn btn-primary btn-lg" href="#" data-event="cta-start-trial">Start free trial</a>
-      <a class="btn btn-ghost btn-lg" href="/roi-calculator/" data-event="cta-estimate">Estimate your savings →</a>
+      <a class="btn btn-ghost btn-lg" href={u('/roi-calculator/')} data-event="cta-estimate">Estimate your savings →</a>
     </div>
     <div class="micro">SOC 2 Type II · GDPR · VPC or self-hosted deployment</div>
   </div>

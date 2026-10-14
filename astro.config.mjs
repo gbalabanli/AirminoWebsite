@@ -2,12 +2,13 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// Static output for GitHub Pages + custom domain (https://airmino.com).
-// `base: '/'` is correct for both the apex domain and the
-// gbalabanli.github.io/AirminoWebsite fallback ONLY if served from root;
-// project-page fallback would need base '/AirminoWebsite/' — see Phase 01 notes.
+// Static output for GitHub Pages.
+// INTERIM: project-subpath hosting (gbalabanli.github.io/AirminoWebsite/)
+// until DNS cutover → base '/AirminoWebsite/' + u() links (see src/lib/site.ts).
+// AT DNS CUTOVER: set base back to '/' and redeploy. Nothing else changes.
 export default defineConfig({
   site: 'https://airmino.com',
+  base: '/AirminoWebsite/',
   output: 'static',
   integrations: [sitemap()],
 });

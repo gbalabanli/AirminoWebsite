@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/site';
 /* First card links to the Ledgerline case study (Phase 03). The other two
    teasers keep prototype copy but are non-interactive until their case pages
    exist — the prototype's alert() popups are intentionally not ported. */
@@ -11,7 +12,7 @@
       <h2>What it looks like in production.</h2>
     </div>
     <div class="cases">
-      <a class="case-card" href="/case-studies/ledgerline/" data-event="case-open-ledgerline">
+      <a class="case-card" href={u('/case-studies/ledgerline/')} data-event="case-open-ledgerline">
         <div class="co">Ledgerline · Payments</div>
         <h4>Fraud review time cut from 4 hours to 90 seconds</h4>
         <div class="big">-62%</div>
