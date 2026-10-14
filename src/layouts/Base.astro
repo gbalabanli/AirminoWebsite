@@ -21,7 +21,6 @@ const {
   canonicalPath = '/',
   brandName = 'Airmino',
 } = Astro.props;
-const brandMark = brandName.charAt(0).toUpperCase();
 const canonical = SITE + canonicalPath;
 ---
 
@@ -31,7 +30,8 @@ const canonical = SITE + canonicalPath;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href={u('/favicon.svg')} />
+    <link rel="icon" type="image/png" href={u('/favicon.png')} />
+    <link rel="apple-touch-icon" href={u('/favicon.png')} />
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
@@ -46,8 +46,8 @@ const canonical = SITE + canonicalPath;
   <body>
     <header class="nav">
       <div class="wrap nav-inner">
-        <a class="brand" href={u('/')}>
-          <span class="brand-mark">{brandMark}</span> {brandName}
+        <a class="brand" href={u('/')} aria-label={brandName}>
+          <img src={u('/logo-1.png')} alt={brandName} class="brand-logo" />
         </a>
         <nav class="nav-links" aria-label="Primary">
           <a href={u('/')}>Platform</a>
@@ -97,17 +97,10 @@ const canonical = SITE + canonicalPath;
     font-size: 17px;
     letter-spacing: -0.03em;
   }
-  .brand-mark {
-    width: 24px;
-    height: 24px;
-    border-radius: 7px;
-    background: linear-gradient(135deg, var(--accent), #7a8cff);
-    display: grid;
-    place-items: center;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 800;
-    font-family: var(--mono);
+  .brand-logo {
+    height: 30px;
+    width: auto;
+    display: block;
   }
   .nav-links {
     display: flex;
