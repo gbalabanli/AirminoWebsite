@@ -84,6 +84,7 @@ const canonical = SITE + canonicalPath;
     border-bottom: 1px solid var(--line);
   }
   .nav-inner {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 32px;
@@ -103,6 +104,9 @@ const canonical = SITE + canonicalPath;
     display: block;
   }
   .nav-links {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     gap: 26px;
     font-size: 14px;
