@@ -2,13 +2,12 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// Static output for GitHub Pages.
-// INTERIM: project-subpath hosting (gbalabanli.github.io/AirminoWebsite/)
-// until DNS cutover → base '/AirminoWebsite/' + u() links (see src/lib/site.ts).
-// AT DNS CUTOVER: set base back to '/' and redeploy. Nothing else changes.
+// Static output for GitHub Pages + custom domain (https://airmino.com).
+// DNS cutover complete (2026-10-14): apex A + www CNAME point at Pages,
+// so base is '/' and u() links render root-absolute.
 export default defineConfig({
   site: 'https://airmino.com',
-  base: '/AirminoWebsite/',
+  base: '/',
   output: 'static',
   integrations: [sitemap()],
 });
