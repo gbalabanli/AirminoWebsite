@@ -16,3 +16,6 @@ Thumbs.db
 .logs/
 .vscode/*
 !.vscode/extensions.json
+
+# Playwright MCP page snapshots (local verification artifact)
+.playwright-mcp/
