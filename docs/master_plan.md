@@ -3,14 +3,14 @@
 ## Planning Metadata
 - Last Updated: 2026-10-13
 - Planning Horizon: GitHub repo → Astro static launch on custom domain
-- Overall Status: Complete except DNS cutover (site built, rebranded, deployed green; `airmino.com` needs your DNS edit)
+- Overall Status: Complete — https://airmino.com live (HTTPS). Only Lighthouse measurement outstanding.
 
 ## Project Goal
 Ship Airmino's public website as a fast Astro static site, deployed from GitHub to a custom domain, positioning Airmino as Decision Infrastructure for automated business decisions (Jev-like). The site must enable self-serve evaluation: proof-first hero, 3-depth landing, objection handling, case-study proof, and ROI calculator — forming the Intent Activation Loop (brand → self-serve → proof → intent signal).
 
 ## Current Status Snapshot
 - Complete: Single-file Verdict-branded prototype (`docs/design/index.html`) with 3 logical pages in one HTML file: Home/Platform, Ledgerline case study, ROI calculator (vanilla JS, ~no build).
-- Active: Phase 04 Complete (`2652534` + CI fixes). Live: https://gbalabanli.github.io/AirminoWebsite/ (deploy success, HTTP 200). Single external blocker: DNS for `airmino.com` → Pages, then HTTPS auto-enforces.
+- Active: Project complete. Live: https://airmino.com (deploy success, HTTPS enforced, cert to 2027-01-12). Repo: https://github.com/gbalabanli/AirminoWebsite (clean, tracking `origin/main`).
 - Success check: repo ✓ · 3 routes ✓ · verdict-clean ✓ · links unbroken ✓ · sitemap ✓ · canonical/OG ✓ · Actions green ✓ · Lighthouse unmeasured · custom domain pending DNS.
 - Not started: Airmino rebrand, Pages environment enablement, custom-domain DNS cutover, content rewrite, analytics.
 
@@ -57,7 +57,7 @@ Split into 4 forward-only phases: Foundation (repo + scaffold + deploy skeleton)
 | Phase 01 | Complete | GitHub repo + Astro scaffold + Pages skeleton | None | [phase-01-foundation.md](phases/phase-01-foundation.md) |
 | Phase 02 | Complete | Home/Platform page port with 3-depth structure | Phase 01 | [phase-02-home-platform.md](phases/phase-02-home-platform.md) |
 | Phase 03 | Complete | Case-study page + interactive ROI calculator | Phase 01 | [phase-03-case-calculator.md](phases/phase-03-case-calculator.md) |
-| Phase 04 | Complete* | Airmino copy rewrite, SEO/analytics, domain launch | Phase 02, Phase 03 | [phase-04-content-launch.md](phases/phase-04-content-launch.md) |
+| Phase 04 | Complete | Airmino copy rewrite, SEO/analytics, domain launch | Phase 02, Phase 03 | [phase-04-content-launch.md](phases/phase-04-content-launch.md) |
 
 ## Phase Gates
 - Gate A (after 01): repo live + `npm run build` passes, Actions workflow dry-runs, preview URL serves `/` stub.
@@ -105,3 +105,4 @@ Split into 4 forward-only phases: Foundation (repo + scaffold + deploy skeleton)
 - 2026-10-13: M3 done, Gate B passed — case + calculator `3bf9306` (live browser = node reference; null-id crash caught and fixed); Phase 03 → Complete.
 - 2026-10-14: M4 site work done — rebrand `2652534` (0 verdict hits, SEO/sitemap/analytics), CI fixed (Pages enabled, npm-install step) and deploy green; live on `github.io`. Phase 04 → Complete* (*DNS cutover + Lighthouse left to you).
 - 2026-10-14: Fixed live-subpath rendering (base `/AirminoWebsite/` + `u()` links; verified all-200 + content match live); cutover = set base to `/` + redeploy.
+- 2026-10-14: Gate C passed — DNS cutover via Cloudflare API (apex A + www CNAME), base `/`, Pages cname + HTTPS enforced, https://airmino.com verified live. All phases Complete.

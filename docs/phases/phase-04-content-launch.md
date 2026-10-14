@@ -1,7 +1,7 @@
 # Phase 04: Airmino Content + Launch
 
 ## Phase Metadata
-- Status: Complete (site work; custom-domain cutover awaits DNS — external)
+- Status: Complete — site live on https://airmino.com (HTTPS, cert to 2027-01-12)
 - Last Updated: 2026-10-14
 - Duration Target: 1–2 sessions
 - Related Master Plan: [../master_plan.md](../master_plan.md)
@@ -47,9 +47,9 @@ Turn the Verdict prototype into Airmino's launch site: full rename + intent-loop
 - Launch state: Pages enabled (workflow build), deploy run **success** (`6fcb6bb`), live at `https://gbalabanli.github.io/AirminoWebsite/` (HTTP 200, full Airmino homepage). Fixed two CI issues en route: Pages-not-enabled `configure-pages` failure → enabled via API; `npm ci` Linux lock drift (`@emnapi/*`) → `npm install` step.
 
 ### Known Gaps / Deferred Items
-- **DNS (your action, ~10 min):** point `airmino.com` at GitHub Pages (apex A records `185.199.108/109/110/111.153` or CNAME `www` → `gbalabanli.github.io`), then HTTPS enforces automatically.
-- **Interim base strategy (fixed live-subpath rendering):** root-absolute assets 404'd on `github.io/AirminoWebsite/`, so `base` is `/AirminoWebsite/` + all handwritten links go through `u()` (`src/lib/site.ts`). **At DNS cutover: set `base` back to `'/'` and redeploy — nothing else changes.** Sitemap/canonical interim-point at `airmino.com[/AirminoWebsite/…]` and self-correct at cutover.
-- **Lighthouse score unmeasured** (no runner in this env); payload is 21KB HTML + 11KB CSS max, zero blocking JS on `/` — run it post-DNS, target ≥90.
+- **DNS cutover DONE (2026-10-14, via Cloudflare API):** deleted 4 parking records; created 4 apex A (GitHub IPs, DNS-only) + `www` CNAME; `base` back to `/`; Pages cname set; LE cert issued for apex+www; HTTPS enforced. Verified: apex/calc/case 200, www 301→apex, 0 `verdict` strings live.
+- **Post-cutover reminder:** delete the disposable Cloudflare API token used for the DNS edit.
+- **Lighthouse score unmeasured** (no runner in this env); payload is 21KB HTML + 11KB CSS max, zero blocking JS on `/` — run it when convenient, target ≥90.
 
 ## Risks And Blockers
 - Risk (covered): placeholder numbers as fact → `docs/content-sources.md` ledger.
@@ -61,3 +61,4 @@ Turn the Verdict prototype into Airmino's launch site: full rename + intent-loop
 ## Master Plan Sync Notes
 - Update master plan: Phase 04 status, Overall Status, Success Criteria check-off, Change Log entry, domain + analytics decisions.
 - 2026-10-14: Phase 04 Complete except DNS cutover + Lighthouse measurement (both external). Gate C partially passed (Actions green, site live on `github.io`).
+- 2026-10-14: Gate C passed — DNS cutover done, https://airmino.com live (200s, HTTPS enforced, cert to 2027-01-12). Project complete.
