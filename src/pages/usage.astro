@@ -1,0 +1,158 @@
+---
+import Base from '../layouts/Base.astro';
+import StoryTabs from '../components/StoryTabs.astro';
+import StoryApiExample from '../components/StoryApiExample.astro';
+import { STORIES } from '../lib/stories';
+import { u } from '../lib/site';
+---
+
+<Base
+  title="Usage stories — see Airmino decide"
+  description="Four worked examples of Airmino decision infrastructure: fraud detection, support routing, loan pre-qualification, and offer selection — each with the exact API call and result."
+  canonicalPath="/usage/"
+>
+  <div class="usage-hero">
+    <div class="wrap">
+      <div class="crumb">
+        <a href={u('/')}>Platform</a>
+        <span class="sep">/</span>
+        <span>Usage stories</span>
+      </div>
+      <div class="kicker">Usage stories</div>
+      <h1>See Airmino decide.</h1>
+      <p>
+        Four worked examples of the same API — <code>POST /v1/decide</code> — applied to four
+        different workflows. Each story shows the problem, the exact call, and the result.
+        Static examples: nothing here executes or touches a network.
+      </p>
+    </div>
+  </div>
+
+  <section class="band">
+    <div class="wrap">
+      <StoryTabs />
+
+      {STORIES.map((s, i) => (
+        <article
+          id={`panel-${s.slug}`}
+          data-story-panel={s.slug}
+          role="tabpanel"
+          aria-labelledby={`tab-${s.slug}`}
+          hidden={i !== 0}
+        >
+          <div class="story-head">
+            <div class="story-co">{s.company}</div>
+            <h2>{s.headline}</h2>
+            <p>{s.problem}</p>
+          </div>
+
+          <StoryApiExample storySlug={s.slug} />
+
+          <div class="story-outcome">
+            <div class="story-stat">{s.outcomeStat}</div>
+            <div>
+              <div class="story-stat-lbl">{s.outcomeLabel}</div>
+              <div class="story-note">{s.outcomeNote}</div>
+            </div>
+          </div>
+        </article>
+      ))}
+
+      <div class="cta-row" style="margin-top:36px">
+        <a class="btn btn-primary btn-lg" href={u('/roi-calculator/')} data-event="cta-estimate">Estimate your savings</a>
+        <a class="btn btn-ghost btn-lg" href={u('/#pricing')} data-event="cta-pricing">See platform pricing →</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .usage-hero {
+    padding: 64px 0 44px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .usage-hero .crumb a {
+    color: var(--muted-2);
+  }
+  .usage-hero .crumb a:hover {
+    color: var(--ink);
+  }
+  .usage-hero h1 {
+    font-size: clamp(28px, 3.6vw, 42px);
+    letter-spacing: -0.035em;
+    margin-bottom: 16px;
+    line-height: 1.15;
+    font-weight: 680;
+  }
+  .usage-hero p {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 680px;
+    line-height: 1.65;
+  }
+  .usage-hero p code {
+    font-family: var(--mono);
+    font-size: 14px;
+    background: #fff;
+    padding: 1px 6px;
+    border-radius: 5px;
+    border: 1px solid var(--line);
+  }
+  .story-head {
+    max-width: 720px;
+    margin-bottom: 26px;
+  }
+  .story-co {
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    font-weight: 660;
+    margin-bottom: 12px;
+    font-family: var(--mono);
+  }
+  .story-head h2 {
+    font-size: clamp(22px, 2.6vw, 30px);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    font-weight: 680;
+    margin-bottom: 12px;
+  }
+  .story-head p {
+    font-size: 15.5px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .story-outcome {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-top: 26px;
+    padding: 22px 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--mint-soft);
+  }
+  .story-stat {
+    font-family: var(--mono);
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--mint);
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+  .story-stat-lbl {
+    font-size: 14.5px;
+    font-weight: 620;
+    margin-bottom: 4px;
+  }
+  .story-note {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  article[hidden] {
+    display: none;
+  }
+</style>

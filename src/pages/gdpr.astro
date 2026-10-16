@@ -1,0 +1,162 @@
+---
+import Base from '../layouts/Base.astro';
+import { u } from '../lib/site';
+---
+
+<Base
+  title="GDPR & data processing — Airmino"
+  description="How Airmino handles personal data: minimization, VPC/self-hosted deployment, retention, subprocessors, and your rights under the GDPR."
+  canonicalPath="/gdpr/"
+>
+  <div class="gdpr-hero">
+    <div class="wrap">
+      <div class="crumb">
+        <a href={u('/')}>Home</a>
+        <span class="sep">/</span>
+        <span>GDPR &amp; data processing</span>
+      </div>
+      <div class="kicker">Compliance</div>
+      <h1>Your data stays yours.</h1>
+      <p>
+        Airmino is decision infrastructure, not a data business. We process the minimum personal data
+        needed to return a decision, we never train models on your data, and you can keep everything
+        inside your own network. Last updated: October 2026.
+      </p>
+    </div>
+  </div>
+
+  <section class="band">
+    <div class="wrap gdpr-grid">
+      <div class="gdpr-block">
+        <h2>What we process</h2>
+        <p>
+          To return a decision we process the fields you send in <code>POST /v1/decide</code> —
+          typically a decision name, the options you define, and context fields (e.g. amounts,
+          priorities, segments). What you put in the payload is what gets processed; nothing more
+          is collected. Send reference IDs instead of raw personal data wherever your workflow allows it.
+        </p>
+      </div>
+      <div class="gdpr-block">
+        <h2>Where it runs</h2>
+        <p>
+          Airmino deploys inside your VPC or fully self-hosted as a single container with no external
+          calls — decision payloads never leave your network and there is no cross-border transfer to
+          manage. On the managed cloud option, processing stays in the region you select and logs are
+          retained for 30 days, then deleted.
+        </p>
+      </div>
+      <div class="gdpr-block">
+        <h2>No training on your data</h2>
+        <p>
+          Customer payloads and decisions are never used to train, fine-tune, or evaluate models.
+          Product telemetry (request counts, latency distributions, error rates) contains no payload
+          content and is aggregated before storage.
+        </p>
+      </div>
+      <div class="gdpr-block">
+        <h2>Your rights</h2>
+        <p>Under the GDPR you can request access, rectification, erasure, restriction, portability, and objection for personal data we process as a processor. Because most deployments keep data inside your own infrastructure, many requests are fastest answered by your own team — we support you with deletion tooling and a data processing agreement on request.</p>
+        <p>To exercise your rights, contact <a href="mailto:privacy@airmino.com">privacy@airmino.com</a>. We respond within 30 days.</p>
+      </div>
+      <div class="gdpr-block">
+        <h2>Subprocessors &amp; DPA</h2>
+        <p>
+          Self-hosted and VPC deployments have no subprocessors — there is nobody downstream to list.
+          The managed cloud option uses only infrastructure hosting in your selected region.
+          The trial signup form is processed by FormSubmit (form-to-email delivery) — the only
+          website subprocessor. A data processing agreement (DPA) incorporating the EU Standard
+          Contractual Clauses where relevant is available on request before any pilot.
+        </p>
+      </div>
+      <div class="gdpr-block">
+        <h2>Security</h2>
+        <p>
+          Encryption in transit (TLS 1.2+) and at rest, mTLS service identity between components,
+          and append-only audit logs for decision traces. Full control mappings are provided under NDA
+          during enterprise evaluation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="wrap">
+      <div class="cta-row">
+        <a class="btn btn-primary btn-lg" href={u('/usage/')} data-event="gdpr-see-usage">See what it decides →</a>
+        <a class="btn btn-ghost btn-lg" href={u('/#pricing')} data-event="cta-pricing">See platform pricing</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .gdpr-hero {
+    padding: 64px 0 44px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .gdpr-hero .crumb a {
+    color: var(--muted-2);
+  }
+  .gdpr-hero .crumb a:hover {
+    color: var(--ink);
+  }
+  .gdpr-hero h1 {
+    font-size: clamp(28px, 3.6vw, 42px);
+    letter-spacing: -0.035em;
+    margin-bottom: 16px;
+    line-height: 1.15;
+    font-weight: 680;
+  }
+  .gdpr-hero p {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 680px;
+    line-height: 1.65;
+  }
+  .gdpr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .gdpr-block {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px;
+  }
+  .gdpr-block:first-child {
+    grid-column: 1 / -1;
+  }
+  .gdpr-block h2 {
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    font-weight: 680;
+  }
+  .gdpr-block p {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .gdpr-block p + p {
+    margin-top: 10px;
+  }
+  .gdpr-block code {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: var(--paper-2);
+    padding: 1px 5px;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+  }
+  .gdpr-block a {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  @media (max-width: 980px) {
+    .gdpr-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import { STORIES } from '../lib/stories';
+/* Accessible tablist for /usage/ story panels. All panels are server-rendered
+   (fraud panel visible by default); this script only enhances switching with
+   click + arrow-key support and hash deep-links. Vanilla, no framework. */
+---
+
+<div class="story-tabs" role="tablist" aria-label="Usage stories">
+  {STORIES.map((s, i) => (
+    <button
+      type="button"
+      role="tab"
+      id={`tab-${s.slug}`}
+      aria-controls={`panel-${s.slug}`}
+      aria-selected={i === 0 ? 'true' : 'false'}
+      data-story-tab={s.slug}
+      class={i === 0 ? 'story-tab is-active' : 'story-tab'}
+      tabindex={i === 0 ? '0' : '-1'}
+    >
+      <span class="story-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <span>{s.label}</span>
+    </button>
+  ))}
+</div>
+
+<script is:inline>
+  (function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[data-story-tab]'));
+    if (!tabs.length) return;
+
+    function panels() {
+      return Array.prototype.slice.call(document.querySelectorAll('[data-story-panel]'));
+    }
+
+    function select(slug, focus) {
+      tabs.forEach(function (t) {
+        var on = t.getAttribute('data-story-tab') === slug;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.setAttribute('tabindex', on ? '0' : '-1');
+        t.classList.toggle('is-active', on);
+        if (on && focus) t.focus();
+      });
+      panels().forEach(function (p) {
+        p.hidden = p.getAttribute('data-story-panel') !== slug;
+      });
+      if (history.replaceState) history.replaceState(null, '', '#' + slug);
+    }
+
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () {
+        select(t.getAttribute('data-story-tab'), false);
+      });
+      t.addEventListener('keydown', function (e) {
+        var next = null;
+        if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+        if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+        if (e.key === 'Home') next = tabs[0];
+        if (e.key === 'End') next = tabs[tabs.length - 1];
+        if (next) {
+          e.preventDefault();
+          select(next.getAttribute('data-story-tab'), true);
+        }
+      });
+    });
+
+    // Deep-link: honor #slug on load when it matches a story.
+    var initial = (location.hash || '').replace('#', '');
+    if (initial && tabs.some(function (t) { return t.getAttribute('data-story-tab') === initial; })) {
+      select(initial, false);
+    }
+  })();
+</script>
+
+<style>
+  .story-tabs {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 34px;
+    padding: 8px;
+    margin-left: -8px;
+    margin-right: -8px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, var(--paper-2), #fff);
+    border: 1px solid var(--line);
+  }
+  .story-tab {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 20px 12px 14px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.16s, box-shadow 0.16s, background 0.16s, color 0.16s;
+  }
+  .story-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 7px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    color: var(--muted-2);
+    transition: background 0.16s, color 0.16s, border-color 0.16s;
+  }
+  .story-tab:hover {
+    background: #fff;
+    color: var(--ink);
+    border-color: var(--line);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .story-tab:hover .story-num {
+    color: var(--accent);
+    border-color: #c9d0e4;
+  }
+  .story-tab.is-active {
+    background: linear-gradient(135deg, var(--accent) 0%, #6a5cff 55%, var(--mint) 130%);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 8px 24px -8px rgba(59, 91, 255, 0.55);
+    transform: translateY(-2px);
+  }
+  .story-tab.is-active .story-num {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.35);
+    color: #fff;
+  }
+  .story-tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+</style>

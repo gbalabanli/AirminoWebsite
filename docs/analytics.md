@@ -28,7 +28,15 @@ every `[data-event]` click as a Plausible custom event **and** as an
 | Medium (comparing) | Case “Estimate your savings” | `cta-estimate` |
 | Medium (comparing) | Sidebar “Open calculator” | `cta-open-calculator` |
 | High (ready to pilot) | Hero / Final / Calc “Start … trial” | `cta-start-trial` |
-| Proof (late-stage) | Teaser + calc “Ledgerline case” links | `case-open-ledgerline` |
+| High (ready to pilot) | Trial modal open / submit / success | `trial-form-open`, `trial-form-submit`, `trial-form-success` |
+| Proof (late-stage) | Teaser + calc usage-story links | `story-open-fraud-detection` |
+| Proof (late-stage) | Usage teaser cards | `story-open-fraud-detection`, `story-open-support-routing`, `story-open-loan-prequal` |
+| Medium (comparing) | Usage → pricing CTA | `cta-pricing` |
+| Resources | Footer “GDPR & data processing” link | `footer-gdpr` |
+| Resources | Footer “MIT licence” link | `footer-license` |
+| Trust | GDPR page “See what it decides” CTA | `gdpr-see-usage` |
+| Proof (late-stage) | Usage story copy buttons | `story-copy-curl-<slug>`, `story-copy-response-<slug>` |
+| Medium (comparing) | Pricing toggle + tier CTAs | `pricing-billing-monthly`, `pricing-billing-annual`, `pricing-start-developer`, `pricing-trial-growth`, `pricing-contact-enterprise` |
 
 ## Recommended funnels
 1. **Evaluation path:** `/` → `cta-estimate` → `cta-open-calculator` → `cta-start-trial`

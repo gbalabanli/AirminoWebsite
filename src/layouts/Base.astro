@@ -3,7 +3,11 @@ import '../styles/tokens.css';
 import '../styles/buttons.css';
 import '../styles/sections.css';
 import Analytics from '../components/Analytics.astro';
+import TrialModal from '../components/TrialModal.astro';
 import { u } from '../lib/site';
+import pkg from '../../package.json';
+
+const year = new Date().getFullYear();
 
 interface Props {
   title: string;
@@ -50,12 +54,12 @@ const canonical = SITE + canonicalPath;
           <img src={u('/logo-1.png')} alt={brandName} class="brand-logo" />
         </a>
         <nav class="nav-links" aria-label="Primary">
-          <a href={u('/')}>Platform</a>
-          <a href={u('/case-studies/ledgerline/')}>Case Studies</a>
+          <a href={u('/usage/')}>Usage</a>
           <a href={u('/roi-calculator/')}>ROI Calculator</a>
+          <a href={u('/#pricing')}>Pricing</a>
         </nav>
         <div class="nav-right">
-          <a class="btn btn-primary btn-sm" href={u('/#start')}>Start free trial</a>
+          <a class="btn btn-primary btn-sm" href={u('/#start')} data-trial-open data-event="cta-start-trial">Start free trial</a>
         </div>
       </div>
     </header>
@@ -65,11 +69,33 @@ const canonical = SITE + canonicalPath;
     </main>
 
     <footer>
+      <div class="wrap foot-links">
+        <div class="foot-col">
+          <span class="foot-h">Product</span>
+          <a href={u('/usage/')}>Usage stories</a>
+          <a href={u('/roi-calculator/')}>ROI calculator</a>
+          <a href={u('/#pricing')}>Pricing</a>
+        </div>
+        <div class="foot-col">
+          <span class="foot-h">Resources</span>
+          <a href={u('/gdpr/')} data-event="footer-gdpr">GDPR &amp; data processing</a>
+          <a href={u('/#benchmarks')}>Benchmark methodology</a>
+          <a href={u('/#architecture')}>Architecture FAQ</a>
+        </div>
+        <div class="foot-col">
+          <span class="foot-h">Evaluate</span>
+          <a href={u('/usage/#fraud-detection')}>Fraud detection</a>
+          <a href={u('/usage/#support-routing')}>Support routing</a>
+          <a href={u('/usage/#loan-prequal')}>Loan pre-qual</a>
+        </div>
+      </div>
       <div class="wrap foot-bottom">
-        <span>© 2025 Airmino, Inc.</span>
-        <span>SOC 2 Type II · GDPR · VPC &amp; self-hosted</span>
+        <span>© {year} airmino.com</span>
+        <span>VPC or self-hosted · No training on your data</span>
+        <span><a href="https://github.com/gbalabanli/AirminoWebsite/blob/main/LICENSE" data-event="footer-license">MIT licence</a> · v{pkg.version}</span>
       </div>
     </footer>
+    <TrialModal />
     <Analytics />
   </body>
 </html>
@@ -126,8 +152,36 @@ const canonical = SITE + canonicalPath;
   footer {
     background: var(--ink-2);
     color: #7c87a3;
-    padding: 34px 0;
+    padding: 44px 0 30px;
     font-size: 13.5px;
+  }
+  .foot-links {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    padding-bottom: 28px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #242e48;
+  }
+  .foot-col {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 150px;
+  }
+  .foot-h {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #aab4cc;
+    margin-bottom: 4px;
+  }
+  .foot-col a {
+    font-size: 13.5px;
+  }
+  .foot-col a:hover {
+    color: #fff;
   }
   .foot-bottom {
     display: flex;
@@ -135,6 +189,9 @@ const canonical = SITE + canonicalPath;
     flex-wrap: wrap;
     gap: 14px;
     font-size: 12.5px;
+  }
+  .foot-bottom a:hover {
+    color: #fff;
   }
   @media (max-width: 980px) {
     .nav-links {

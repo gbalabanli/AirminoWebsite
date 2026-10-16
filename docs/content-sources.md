@@ -14,10 +14,16 @@ sales contexts.
 | Metrics | $0.04/1k, tiers to $0.018 | Assumption | Pricing decision |
 | Metrics | 100% schema-valid, 0 retraining | Assumption | Product/eng sign-off |
 | Benchmarks table | All 7 rows (LLM/rules/classifier/Airmino) | Assumption | Open benchmark harness + appendix |
-| Case hero/KPIs | -62%, 90s, $1.4M, 2.1M/mo | Assumption | Customer agreement + measured data |
-| Case table | 6 before/after rows | Assumption | Same as above |
+| Case hero/KPIs | -62%, 90s, $1.4M, 2.1M/mo | Removed 2026-10-16 | Ledgerline case-study page deleted; fraud proof now the `/usage/` fraud-detection story |
+| Case table | 6 before/after rows | Removed 2026-10-16 | Same as above |
 | Calculator defaults | 250k/mo, $0.85, $0.04, $0 fee | Assumption | Representative customer profile |
 | Logo strip | LEDGERLINE, Northwind, ARCADIA, … | Assumption | Real customer logos + permission |
+| Usage stories | All 4 narratives + outcome stats (-62%/-41%/3.2×/+23%) | Assumption | Customer agreement + measured data |
+| Story API fixtures | All curl/response payloads + latencies | Assumption | Real `POST /v1/decide` traces |
+| Pricing matrix | Developer $0 / Growth $239 / Enterprise Custom + limits | Assumption | Pricing decision |
+| GDPR page | 30-day log retention, privacy@airmino.com, control mappings under NDA | Assumption | Legal/eng sign-off + real privacy contact |
+| Trial form | Recipient dashzeofficial@gmail.com via FormSubmit (address visible in client JS) | Assumption | Confirm inbox + click FormSubmit activation email after first submission |
+| Trust claims | SOC 2 Type II badges | Removed 2026-10-16 | No certification to cite — replaced with footer credibility links + GDPR page |
 
 ## Known prototype inconsistency (kept, not fixed)
 The prototype's **static calculator placeholders** ($2,430,000/yr, $202,500/mo,

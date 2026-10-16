@@ -1,0 +1,225 @@
+---
+import { STORIES, storyCurl, storyResponse, getStory } from '../lib/stories';
+
+interface Props {
+  storySlug: string;
+}
+
+const { storySlug } = Astro.props;
+const story = getStory(storySlug);
+const curl = storyCurl(story);
+const response = storyResponse(story);
+const reqId = `req-${story.slug}`;
+const resId = `res-${story.slug}`;
+---
+
+<div class="api-example">
+  <div class="api-bar">
+    <span class="api-method">POST</span>
+    <span class="api-url">https://airmino.com/v1/decide</span>
+    <span class="api-story">{story.label}</span>
+  </div>
+  <div class="api-grid">
+    <div class="api-pane">
+      <div class="api-pane-head">
+        <span>Request</span>
+        <button
+          type="button"
+          class="api-copy"
+          data-copy-target={reqId}
+          data-event={`story-copy-curl-${story.slug}`}
+          aria-label={`Copy curl request for ${story.label}`}
+        >
+          Copy
+        </button>
+      </div>
+      <pre id={reqId} class="api-code api-req">{curl}</pre>
+    </div>
+    <div class="api-pane api-pane-dark">
+      <div class="api-pane-head">
+        <span>Response</span>
+        <button
+          type="button"
+          class="api-copy"
+          data-copy-target={resId}
+          data-event={`story-copy-response-${story.slug}`}
+          aria-label={`Copy JSON response for ${story.label}`}
+        >
+          Copy
+        </button>
+      </div>
+      <pre id={resId} class="api-code api-res">{response}</pre>
+      <div class="api-meta">
+        <span>200 OK · <strong>{story.latencyMs}ms</strong></span>
+        <span>static example · zero network</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  // Single delegated copy handler for every StoryApiExample on the page.
+  // Guarded so the N instances Astro renders only bind once. Vanilla only.
+  if (!window.__airminoCopyBound) {
+    window.__airminoCopyBound = true;
+    document.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.api-copy') : null;
+      if (!btn) return;
+      var pre = document.getElementById(btn.getAttribute('data-copy-target'));
+      if (!pre) return;
+      var text = pre.textContent || '';
+      function done() {
+        var original = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.textContent = original; }, 1200);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { fallback(); });
+      } else {
+        fallback();
+      }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (err) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  }
+</script>
+
+<style>
+  .api-example {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--shadow);
+  }
+  .api-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    flex-wrap: wrap;
+  }
+  .api-method {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 7px;
+    letter-spacing: 0.04em;
+  }
+  .api-url {
+    color: var(--ink);
+    font-weight: 600;
+    word-break: break-all;
+  }
+  .api-story {
+    margin-left: auto;
+    color: var(--muted-2);
+    font-size: 11.5px;
+  }
+  .api-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .api-pane {
+    padding: 18px;
+    min-width: 0;
+  }
+  .api-pane + .api-pane {
+    border-left: 1px solid var(--line);
+  }
+  .api-pane-dark {
+    background: var(--ink);
+    color: #c6cee4;
+  }
+  .api-pane-dark.api-pane + .api-pane-dark.api-pane {
+    border-left-color: var(--line-dark);
+  }
+  .api-pane-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted-2);
+    margin-bottom: 10px;
+  }
+  .api-pane-dark .api-pane-head {
+    color: #6b7794;
+  }
+  .api-copy {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .api-pane-dark .api-copy {
+    background: var(--ink-2);
+    border-color: var(--line-dark);
+    color: #c6cee4;
+  }
+  .api-copy:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .api-code {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+    white-space: pre;
+    overflow-x: auto;
+    margin: 0;
+  }
+  .api-req {
+    color: var(--ink);
+  }
+  .api-res {
+    color: #8fe3c8;
+  }
+  .api-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line-dark);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: #6b7794;
+  }
+  .api-meta strong {
+    color: #fff;
+  }
+  @media (max-width: 980px) {
+    .api-grid {
+      grid-template-columns: 1fr;
+    }
+    .api-pane + .api-pane {
+      border-left: none;
+      border-top: 1px solid var(--line);
+    }
+    .api-story {
+      margin-left: 0;
+    }
+  }
+</style>
