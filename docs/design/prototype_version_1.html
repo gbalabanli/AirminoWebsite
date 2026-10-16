@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verdict — Decision Infrastructure for Automated Operations</title>
+<style>
+:root{
+  --ink:#0A0E1A; --ink-2:#131A2E; --ink-3:#1E2740;
+  --paper:#FFFFFF; --paper-2:#F5F7FB;
+  --line:#E4E8F2; --line-dark:#242E48;
+  --muted:#5B6478; --muted-2:#8A93A8;
+  --accent:#3B5BFF; --accent-soft:#EEF1FF;
+  --mint:#00C896; --mint-soft:#E6FAF4;
+  --warn:#FF6B4A; --warn-soft:#FFF0EC;
+  --radius:14px;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  --shadow:0 1px 2px rgba(10,14,26,.06), 0 8px 24px -8px rgba(10,14,26,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans); color:var(--ink); background:var(--paper);
+  -webkit-font-smoothing:antialiased; line-height:1.55;
+}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+h1,h2,h3,h4{line-height:1.15;letter-spacing:-.02em;font-weight:680}
+a{color:inherit;text-decoration:none}
+em{font-style:normal}
+
+/* ---------- PROTOTYPE RIBBON ---------- */
+.ribbon{
+  background:var(--ink); color:#fff; font-size:12px; text-align:center;
+  padding:7px 16px; letter-spacing:.04em; font-family:var(--mono);
+}
+.ribbon span{color:var(--mint)}
+
+/* ---------- NAV ---------- */
+.nav{
+  position:sticky; top:0; z-index:100; background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(180%) blur(14px); border-bottom:1px solid var(--line);
+}
+.nav-inner{display:flex;align-items:center;gap:32px;height:66px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;letter-spacing:-.03em}
+.brand-mark{
+  width:24px;height:24px;border-radius:7px;
+  background:linear-gradient(135deg,var(--accent),#7A8CFF);
+  display:grid;place-items:center;color:#fff;font-size:13px;font-weight:800;
+  font-family:var(--mono);
+}
+.nav-links{display:flex;gap:26px;font-size:14px;color:var(--muted);font-weight:520}
+.nav-links button{
+  background:none;border:none;font:inherit;color:inherit;cursor:pointer;padding:0;
+  padding-bottom:2px;border-bottom:1.5px solid transparent;transition:.15s;
+}
+.nav-links button:hover{color:var(--ink)}
+.nav-links button.on{color:var(--ink);border-bottom-color:var(--accent)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.nav-right .signin{font-size:14px;color:var(--muted);font-weight:520}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 20px;border-radius:10px;font-size:14.5px;font-weight:600;
+  cursor:pointer;border:1px solid transparent;transition:.16s;white-space:nowrap;
+  font-family:inherit;
+}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(59,91,255,.3)}
+.btn-primary:hover{background:#2E4CE8;transform:translateY(-1px)}
+.btn-ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{border-color:#C9D0E4;background:var(--paper-2)}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:hover{background:var(--ink-3)}
+.btn-sm{padding:8px 15px;font-size:13.5px}
+.btn-lg{padding:14px 26px;font-size:15.5px}
+
+/* ---------- PAGE SWITCH ---------- */
+.page{display:none}
+.page.active{display:block}
+
+/* ---------- HERO ---------- */
+.hero{
+  background:
+    radial-gradient(900px 480px at 78% -10%, rgba(59,91,255,.10), transparent 62%),
+    radial-gradient(700px 400px at 8% 0%, rgba(0,200,150,.07), transparent 60%),
+    var(--paper);
+  border-bottom:1px solid var(--line);
+  padding:78px 0 0;
+}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:640;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+  background:var(--accent-soft);border:1px solid #DDE3FF;
+  padding:6px 13px;border-radius:100px;margin-bottom:22px;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--mint);
+  box-shadow:0 0 0 3px rgba(0,200,150,.18);animation:pulse 2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(0,200,150,.05)}}
+.hero h1{font-size:clamp(34px,4.4vw,54px);font-weight:700;letter-spacing:-.035em;margin-bottom:20px}
+.hero h1 em{
+  background:linear-gradient(180deg,transparent 62%,rgba(59,91,255,.22) 62%);
+  padding:0 2px;
+}
+.lede{font-size:17.5px;color:var(--muted);max-width:520px;margin-bottom:30px;line-height:1.62}
+.lede strong{color:var(--ink);font-weight:640}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.micro{font-size:13px;color:var(--muted-2);font-family:var(--mono);letter-spacing:-.01em}
+
+/* ---------- TERMINAL ---------- */
+.terminal{
+  background:var(--ink);border-radius:16px;overflow:hidden;
+  box-shadow:0 24px 60px -18px rgba(10,14,26,.45), 0 0 0 1px rgba(255,255,255,.06) inset;
+  font-family:var(--mono);font-size:12.4px;line-height:1.75;
+}
+.term-bar{
+  display:flex;align-items:center;gap:7px;padding:11px 14px;
+  background:var(--ink-2);border-bottom:1px solid var(--line-dark);
+}
+.term-bar i{width:10px;height:10px;border-radius:50%;display:block}
+.term-bar i:nth-child(1){background:#FF5F57}
+.term-bar i:nth-child(2){background:#FEBC2E}
+.term-bar i:nth-child(3){background:#28C840}
+.term-title{margin-left:8px;color:#6B7794;font-size:11px;letter-spacing:.05em}
+.term-body{padding:18px 20px 22px;color:#C6CEE4;overflow-x:auto}
+.term-body .req{color:#7A8CFF;font-weight:600}
+.term-body .key{color:#8FE3C8}
+.term-body .str{color:#FFD08A}
+.term-body .num{color:#FF9E7D}
+.term-body .ok{color:#00C896;font-weight:600}
+.term-body .dim{color:#5A6685}
+.term-body .hot{color:#FF6B4A}
+.term-body hr{border:none;border-top:1px dashed var(--line-dark);margin:13px 0}
+.cursor{display:inline-block;width:7px;height:13px;background:#7A8CFF;
+  vertical-align:-2px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- LOGO STRIP ---------- */
+.logo-strip{padding:34px 0 40px;margin-top:56px;border-top:1px solid var(--line)}
+.logo-strip p{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted-2);font-weight:640;text-align:center;margin-bottom:22px}
+.logos{display:flex;justify-content:center;gap:52px;flex-wrap:wrap;align-items:center}
+.logos span{font-size:17px;font-weight:700;color:#B4BBCE;letter-spacing:-.03em}
+
+/* ---------- SECTION SHELL ---------- */
+section.band{padding:82px 0;border-bottom:1px solid var(--line)}
+section.band.alt{background:var(--paper-2)}
+.sec-head{max-width:660px;margin-bottom:48px}
+.sec-head h2{font-size:clamp(26px,3vw,38px);margin-bottom:14px;letter-spacing:-.032em}
+.sec-head p{font-size:16.5px;color:var(--muted);line-height:1.65}
+.kicker{font-size:12px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--accent);font-weight:680;margin-bottom:12px}
+
+/* ---------- METRIC CARDS ---------- */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.metric{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 22px;transition:.18s;
+}
+.metric:hover{border-color:#C9D0E4;box-shadow:var(--shadow);transform:translateY(-2px)}
+.metric .val{font-size:32px;font-weight:700;letter-spacing:-.04em;
+  font-family:var(--mono);margin-bottom:6px;display:block}
+.metric .val.a{color:var(--accent)}
+.metric .val.m{color:var(--mint)}
+.metric .lbl{font-size:13.5px;color:var(--muted);line-height:1.5}
+
+/* ---------- THREE SPEED ---------- */
+.speeds{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.speed{
+  border:1px solid var(--line);border-radius:var(--radius);padding:26px;
+  background:#fff;position:relative;
+}
+.speed .tag{
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+  background:var(--ink);color:#fff;padding:3px 9px;border-radius:5px;
+  display:inline-block;margin-bottom:14px;
+}
+.speed h4{font-size:16.5px;margin-bottom:9px}
+.speed p{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* ---------- THREE ACT ---------- */
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff}
+.act{padding:32px 28px;border-right:1px solid var(--line)}
+.act:last-child{border-right:none}
+.act .n{font-family:var(--mono);font-size:12px;color:var(--accent);
+  font-weight:700;letter-spacing:.1em;margin-bottom:16px;display:block}
+.act h4{font-size:17px;margin-bottom:11px}
+.act p{font-size:14.2px;color:var(--muted);line-height:1.65}
+
+/* ---------- TABLE ---------- */
+.tbl-wrap{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line)}
+thead th{
+  background:var(--ink);color:#fff;font-size:12px;letter-spacing:.05em;
+  text-transform:uppercase;font-weight:640;
+}
+thead th.hi{background:var(--accent)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--paper-2)}
+td.num{font-family:var(--mono);font-size:13.4px}
+.yes{color:var(--mint);font-weight:700}
+.no{color:var(--warn);font-weight:700}
+td.hi{background:var(--accent-soft);font-weight:600}
+.tbl-note{font-size:12.5px;color:var(--muted-2);margin-top:12px;font-family:var(--mono)}
+
+/* ---------- OBJECTIONS ---------- */
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.q{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.q h4{font-size:15px;margin-bottom:9px;display:flex;gap:10px;align-items:flex-start}
+.q h4::before{content:"?";font-family:var(--mono);color:var(--accent);
+  font-weight:800;flex-shrink:0}
+.q p{font-size:14px;color:var(--muted);line-height:1.65;padding-left:22px}
+.q p code{font-family:var(--mono);font-size:12.5px;background:var(--paper-2);
+  padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+
+/* ---------- CASE CARDS ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.case-card{
+  border:1px solid var(--line);border-radius:var(--radius);background:#fff;
+  padding:26px;display:flex;flex-direction:column;transition:.18s;cursor:pointer;
+}
+.case-card:hover{border-color:#C9D0E4;box-shadow:var(--shadow);transform:translateY(-3px)}
+.case-card .co{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted-2);font-weight:660;margin-bottom:14px;font-family:var(--mono)}
+.case-card h4{font-size:16.5px;line-height:1.35;margin-bottom:16px;letter-spacing:-.02em}
+.case-card .big{font-family:var(--mono);font-size:26px;font-weight:700;
+  color:var(--mint);letter-spacing:-.03em;margin-bottom:4px}
+.case-card .big-lbl{font-size:12.5px;color:var(--muted);margin-bottom:18px}
+.case-card .more{margin-top:auto;font-size:13.5px;font-weight:620;color:var(--accent)}
+
+/* ---------- FINAL CTA ---------- */
+.final{
+  background:var(--ink);color:#fff;padding:88px 0;text-align:center;
+  position:relative;overflow:hidden;
+}
+.final::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(700px 340px at 50% 0%, rgba(59,91,255,.30), transparent 65%);
+}
+.final .wrap{position:relative}
+.final h2{font-size:clamp(28px,3.6vw,44px);margin-bottom:18px;letter-spacing:-.035em}
+.final p{color:#9AA4BE;font-size:17px;max-width:560px;margin:0 auto 34px;line-height:1.6}
+.final .cta-row{justify-content:center}
+.final .btn-ghost{background:transparent;color:#fff;border-color:#33405E}
+.final .btn-ghost:hover{background:rgba(255,255,255,.06);border-color:#4A5878}
+.final .micro{color:#5A6685;margin-top:22px}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--ink-2);color:#7C87A3;padding:56px 0 34px;font-size:13.5px}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}
+.foot-grid h5{color:#fff;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:16px;font-weight:660}
+.foot-grid ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.foot-grid a:hover{color:#fff}
+.foot-brand p{margin-top:14px;line-height:1.65;max-width:280px;font-size:13px}
+.foot-bottom{border-top:1px solid var(--line-dark);padding-top:24px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:12.5px}
+
+/* ================= CASE STUDY PAGE ================= */
+.cs-hero{background:var(--ink);color:#fff;padding:70px 0 74px;position:relative;overflow:hidden}
+.cs-hero::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(800px 400px at 82% 0%, rgba(0,200,150,.14), transparent 62%);
+}
+.cs-hero .wrap{position:relative}
+.crumb{font-family:var(--mono);font-size:12px;color:#6B7794;margin-bottom:26px;
+  display:flex;gap:10px;align-items:center}
+.crumb a:hover{color:#fff}
+.crumb .sep{color:#33405E}
+.cs-hero h1{font-size:clamp(28px,4vw,48px);letter-spacing:-.035em;
+  max-width:880px;margin-bottom:34px;line-height:1.12}
+.cs-hero h1 em{color:var(--mint)}
+.cs-kpis{display:flex;gap:52px;flex-wrap:wrap;padding-top:30px;border-top:1px solid var(--line-dark)}
+.cs-kpi .v{font-family:var(--mono);font-size:30px;font-weight:700;
+  color:#fff;letter-spacing:-.035em;display:block}
+.cs-kpi .v.g{color:var(--mint)}
+.cs-kpi .l{font-size:12.5px;color:#7C87A3;margin-top:5px;letter-spacing:.02em}
+
+.cs-body{padding:64px 0}
+.cs-layout{display:grid;grid-template-columns:1fr 296px;gap:64px;align-items:start}
+
+.summary{
+  font-size:19px;line-height:1.66;color:var(--ink);font-weight:480;
+  padding:26px 0 34px;border-bottom:1px solid var(--line);margin-bottom:40px;
+  letter-spacing:-.012em;
+}
+.summary strong{font-weight:680}
+
+blockquote.pull{
+  border-left:3px solid var(--accent);padding:6px 0 6px 26px;margin:0 0 44px;
+}
+blockquote.pull p{font-size:20px;line-height:1.55;letter-spacing:-.018em;
+  color:var(--ink);margin-bottom:16px;font-weight:500}
+blockquote.pull cite{font-style:normal;font-size:13.5px;color:var(--muted);
+  display:block;font-weight:560}
+blockquote.pull cite b{color:var(--ink);font-weight:660}
+
+.cs-section{margin-bottom:52px}
+.cs-section .lbl{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;margin-bottom:14px;display:block;
+}
+.cs-section h3{font-size:24px;margin-bottom:18px;letter-spacing:-.028em}
+.cs-section p{font-size:16px;color:#39415A;line-height:1.75;margin-bottom:16px}
+.cs-section p:last-child{margin-bottom:0}
+.cs-section ul{margin:0 0 16px 0;padding-left:0;list-style:none}
+.cs-section ul li{
+  font-size:15.5px;color:#39415A;line-height:1.7;padding-left:26px;position:relative;
+  margin-bottom:11px;
+}
+.cs-section ul li::before{
+  content:"→";position:absolute;left:0;color:var(--accent);font-weight:700;
+  font-family:var(--mono);
+}
+
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:34px 0}
+.stat{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:12px;
+  padding:20px;text-align:center;
+}
+.stat .v{font-family:var(--mono);font-size:26px;font-weight:700;
+  color:var(--accent);letter-spacing:-.035em;display:block;margin-bottom:6px}
+.stat .l{font-size:12.5px;color:var(--muted);line-height:1.45}
+
+/* sidebar */
+.side{position:sticky;top:90px}
+.side-card{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px;margin-bottom:18px;
+}
+.side-card h5{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted-2);margin-bottom:18px;font-weight:680}
+.side-row{display:flex;justify-content:space-between;gap:16px;
+  padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.side-row:last-child{border-bottom:none;padding-bottom:0}
+.side-row .k{color:var(--muted)}
+.side-row .v{font-weight:600;text-align:right;font-family:var(--mono);font-size:12.8px}
+.side-cta{background:var(--ink);color:#fff;border:none}
+.side-cta h5{color:#7C87A3}
+.side-cta p{font-size:14px;color:#B4BDD4;line-height:1.6;margin-bottom:18px}
+.side-cta .btn{width:100%}
+
+/* before / after */
+.ba{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:30px 0}
+.ba table{font-size:14px}
+.ba thead th{background:var(--paper-2);color:var(--muted);
+  border-bottom:1px solid var(--line)}
+.ba thead th:last-child{background:var(--accent-soft);color:var(--accent)}
+.ba td.metric-name{font-weight:600;color:var(--ink)}
+.ba td.before{font-family:var(--mono);color:var(--muted);font-size:13.4px}
+.ba td.after{font-family:var(--mono);color:var(--ink);font-weight:660;
+  font-size:13.4px;background:var(--accent-soft)}
+
+/* ================= CALCULATOR PAGE ================= */
+.calc-hero{padding:64px 0 44px;border-bottom:1px solid var(--line);
+  background:var(--paper-2)}
+.calc-hero h1{font-size:clamp(28px,3.6vw,42px);letter-spacing:-.035em;margin-bottom:16px}
+.calc-hero p{font-size:17px;color:var(--muted);max-width:620px;line-height:1.65}
+.calc-grid{display:grid;grid-template-columns:380px 1fr;gap:40px;padding:56px 0 80px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.panel h3{font-size:16px;margin-bottom:6px}
+.panel .sub{font-size:13px;color:var(--muted-2);margin-bottom:24px;font-family:var(--mono)}
+.field{margin-bottom:22px}
+.field label{display:block;font-size:13.5px;font-weight:600;margin-bottom:8px}
+.field .hint{font-size:12px;color:var(--muted-2);margin-top:6px;font-family:var(--mono)}
+.field input[type=range]{width:100%;accent-color:var(--accent);margin-bottom:10px}
+.field .num-input{
+  display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;
+  overflow:hidden;background:#fff;
+}
+.field .num-input span{padding:0 12px;color:var(--muted-2);
+  font-family:var(--mono);font-size:13px;background:var(--paper-2);
+  align-self:stretch;display:flex;align-items:center;border-right:1px solid var(--line)}
+.field .num-input input{
+  border:none;outline:none;padding:10px 12px;font-family:var(--mono);font-size:14px;
+  width:100%;font-weight:600;color:var(--ink);background:transparent;
+}
+.results{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+.result{
+  border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:#fff;
+}
+.result.hero-res{
+  grid-column:1/-1;background:var(--ink);color:#fff;border-color:var(--ink);
+  position:relative;overflow:hidden;
+}
+.result.hero-res::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(500px 220px at 88% 0%, rgba(0,200,150,.20), transparent 62%);
+}
+.result.hero-res > *{position:relative}
+.result .rl{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted-2);font-weight:640;margin-bottom:12px}
+.result.hero-res .rl{color:#7C87A3}
+.result .rv{font-family:var(--mono);font-size:38px;font-weight:700;
+  letter-spacing:-.04em;color:var(--accent)}
+.result.hero-res .rv{color:var(--mint);font-size:52px}
+.result .rs{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
+.result.hero-res .rs{color:#9AA4BE}
+
+.bars{margin-top:8px}
+.bar-row{margin-bottom:22px}
+.bar-row .bl{display:flex;justify-content:space-between;font-size:13.5px;
+  margin-bottom:8px;font-weight:560}
+.bar-row .bl .bv{font-family:var(--mono);font-weight:660}
+.bar{height:12px;border-radius:6px;background:var(--paper-2);overflow:hidden;
+  border:1px solid var(--line)}
+.bar i{display:block;height:100%;border-radius:5px;transition:width .45s cubic-bezier(.4,0,.2,1)}
+.bar i.old{background:linear-gradient(90deg,#FF8B6E,#FF6B4A)}
+.bar i.new{background:linear-gradient(90deg,#00E0A8,#00C896)}
+.bar-row .bv.old{color:var(--warn)}
+.bar-row .bv.new{color:var(--mint)}
+
+.calc-note{
+  background:var(--mint-soft);border:1px solid #B9EEDD;border-radius:12px;
+  padding:18px 20px;font-size:13.5px;color:#0A6B52;line-height:1.6;
+}
+.calc-note b{font-weight:680}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .speeds,.acts,.cases,.faq{grid-template-columns:1fr}
+  .act{border-right:none;border-bottom:1px solid var(--line)}
+  .act:last-child{border-bottom:none}
+  .cs-layout{grid-template-columns:1fr;gap:44px}
+  .side{position:static}
+  .calc-grid{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .metrics,.results,.stat-grid{grid-template-columns:1fr}
+  .cs-kpis{gap:30px}
+  .logos{gap:28px}
+  .foot-grid{grid-template-columns:1fr}
+  .cs-hero h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<div class="ribbon">PROTOTYPE · Placeholder brand “<span>Verdict</span>” · Replace copy, metrics &amp; logos before launch</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#" onclick="go('home');return false;">
+      <span class="brand-mark">V</span> Verdict
+    </a>
+    <nav class="nav-links">
+      <button data-nav="home" onclick="go('home')">Platform</button>
+      <button onclick="go('home');setTimeout(()=>document.getElementById('benchmarks').scrollIntoView(),60)">Benchmarks</button>
+      <button data-nav="case" onclick="go('case')">Case Studies</button>
+      <button data-nav="calc" onclick="go('calc')">ROI Calculator</button>
+      <button onclick="alert('Docs would open here.')">Docs</button>
+    </nav>
+    <div class="nav-right">
+      <a class="signin" href="#" onclick="return false;">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="#start">Start free trial</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ================================================================
+     PAGE 1 — HOME
+================================================================= -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Decision infrastructure</div>
+        <h1>Make <em>1 million</em> operational decisions per hour.</h1>
+        <p class="lede">
+          Calibrated, machine-readable judgments your systems can act on.
+          No text generation. No hallucination. <strong>$0.04 per thousand calls.</strong>
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary btn-lg" href="#start">Start 10,000-decision trial</a>
+          <a class="btn btn-ghost btn-lg" href="#architecture">Read the architecture paper →</a>
+        </div>
+        <div class="micro">No credit card · SOC 2 Type II · VPC or self-hosted</div>
+      </div>
+
+      <div class="terminal">
+        <div class="term-bar">
+          <i></i><i></i><i></i>
+          <span class="term-title">POST /v1/decide — production</span>
+        </div>
+        <div class="term-body">
+<span class="req">POST</span> /v1/decide
+{
+  <span class="key">"decision"</span>: <span class="str">"fraud_review"</span>,
+  <span class="key">"options"</span>: [<span class="str">"approve"</span>, <span class="str">"hold"</span>, <span class="str">"decline"</span>],
+  <span class="key">"context"</span>: {
+    <span class="key">"amount"</span>: <span class="num">4820.00</span>,
+    <span class="key">"velocity_1h"</span>: <span class="num">7</span>,
+    <span class="key">"geo_mismatch"</span>: <span class="num">true</span>,
+    <span class="key">"account_age_days"</span>: <span class="num">3</span>
+  }
+}
+
+<span class="ok">200 OK</span> · <span class="num">88</span>ms
+{
+  <span class="key">"choice"</span>: <span class="str">"hold"</span>,
+  <span class="key">"confidence"</span>: <span class="num">0.94</span>,
+  <span class="key">"calibrated"</span>: <span class="num">true</span>,
+  <span class="key">"rationale_code"</span>: <span class="str">"VELOCITY_ANOMALY"</span>,
+  <span class="key">"escalate"</span>: <span class="num">true</span>
+}
+<span class="dim">// schema-valid · no retraining required</span>
+<span class="cursor"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="logo-strip">
+        <p>Running decision workloads at</p>
+        <div class="logos">
+          <span>LEDGERLINE</span><span>Northwind</span><span>ARCADIA</span>
+          <span>Meridian Health</span><span>Byteline</span><span>OKTAVE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKIM-LEVEL METRICS -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">By the numbers</div>
+        <h2>Built for the throughput your ops team actually needs.</h2>
+        <p>Verdict returns a single calibrated choice from a set you define at request time — never free-form text.</p>
+      </div>
+      <div class="metrics">
+        <div class="metric">
+          <span class="val a">90ms</span>
+          <div class="lbl">p50 latency. p99 holds at <b>140ms</b> under sustained load.</div>
+        </div>
+        <div class="metric">
+          <span class="val m">$0.04</span>
+          <div class="lbl">Per 1,000 decisions. Volume tiers down to $0.018.</div>
+        </div>
+        <div class="metric">
+          <span class="val a">100%</span>
+          <div class="lbl">Schema-valid outputs. Zero parse failures, zero retries.</div>
+        </div>
+        <div class="metric">
+          <span class="val m">0</span>
+          <div class="lbl">Retraining cycles required to add a new option or rule.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE SPEEDS -->
+  <section class="band alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">Read at your own depth</div>
+        <h2>Everything an evaluator needs, at three levels of detail.</h2>
+        <p>Technical buyers skim, scan, then dig. This page is structured so all three happen without a sales call.</p>
+      </div>
+      <div class="speeds">
+        <div class="speed">
+          <span class="tag">5 sec</span>
+          <h4>The headline</h4>
+          <p>1M decisions/hour at $0.04 per thousand. Calibrated, schema-valid, no hallucination. That's the whole pitch.</p>
+        </div>
+        <div class="speed">
+          <span class="tag">30 sec</span>
+          <h4>The shape of it</h4>
+          <p>You define options at request time. Verdict returns one choice plus a confidence score and a machine-readable rationale code. Your systems act on it directly.</p>
+        </div>
+        <div class="speed">
+          <span class="tag">3 min</span>
+          <h4>The architecture</h4>
+          <p>Calibration methodology, benchmark harness, failure modes, deployment topology, and the full comparison against prompted LLMs and rules engines.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE ACTS -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">The problem</div>
+        <h2>Your decision layer is the bottleneck nobody budgets for.</h2>
+      </div>
+      <div class="acts">
+        <div class="act">
+          <span class="n">01 — SITUATION</span>
+          <h4>Rules engines don't generalize</h4>
+          <p>Every new edge case means another branch, another deploy, another quarter of maintenance. The rule tree grows faster than the team maintaining it.</p>
+        </div>
+        <div class="act">
+          <span class="n">02 — COMPLICATION</span>
+          <h4>LLMs don't fit operations</h4>
+          <p>Prompted models are slow, expensive, and return text you have to parse. When parsing fails at 3am, someone gets paged. That's not a decision layer — it's a liability.</p>
+        </div>
+        <div class="act">
+          <span class="n">03 — RESOLUTION</span>
+          <h4>Define choices at request time</h4>
+          <p>Verdict takes your options as input and returns exactly one, with a calibrated probability. Add a new option by changing the payload — not by retraining a model.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENCHMARKS -->
+  <section class="band alt" id="benchmarks">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">Benchmarks</div>
+        <h2>How it compares, measured the same way.</h2>
+        <p>All figures from the open benchmark harness. Methodology and raw traces available in the architecture paper.</p>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Prompted LLM</th>
+              <th>Rules engine</th>
+              <th>Fine-tuned classifier</th>
+              <th class="hi">Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>p50 latency</td><td class="num">1,800ms</td><td class="num">12ms</td><td class="num">40ms</td><td class="num hi">90ms</td></tr>
+            <tr><td>p99 latency</td><td class="num">6,400ms</td><td class="num">30ms</td><td class="num">120ms</td><td class="num hi">140ms</td></tr>
+            <tr><td>Cost per 1,000</td><td class="num">$3.20</td><td class="num">$0.01</td><td class="num">$0.02</td><td class="num hi">$0.04</td></tr>
+            <tr><td>Parseable output</td><td class="num">71%</td><td class="num">100%</td><td class="num">100%</td><td class="num hi">100%</td></tr>
+            <tr><td>Hallucination risk</td><td><span class="no">High</span></td><td><span class="yes">None</span></td><td><span class="yes">None</span></td><td class="hi"><span class="yes">None</span></td></tr>
+            <tr><td>New options without retraining</td><td><span class="yes">Yes</span></td><td><span class="no">No</span></td><td><span class="no">No</span></td><td class="hi"><span class="yes">Yes</span></td></tr>
+            <tr><td>Calibrated confidence</td><td><span class="no">No</span></td><td>—</td><td>Varies</td><td class="hi"><span class="yes">Yes</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tbl-note">Harness: 50,000 held-out decisions · 3 domains · single A100 node · batch size 1</p>
+    </div>
+  </section>
+
+  <!-- OBJECTIONS -->
+  <section class="band" id="architecture">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">Before you ask</div>
+        <h2>The questions your technical evaluator will raise.</h2>
+        <p>Answered here so you don't need a call to get to the interesting part.</p>
+      </div>
+      <div class="faq">
+        <div class="q">
+          <h4>How is this different from a classifier?</h4>
+          <p>A classifier is trained on a fixed label set. Verdict takes <code>options[]</code> as a request parameter, so the same model handles "approve/hold/decline" at 9am and "tier_1/tier_2/tier_3" at 9:05. No retraining, no redeploy.</p>
+        </div>
+        <div class="q">
+          <h4>What's the accuracy versus an LLM?</h4>
+          <p>On structured decision tasks we match or exceed prompted GPT-class models on top-1 accuracy, with calibration error under 2%. Full confidence intervals and per-domain breakdowns are in the benchmark appendix.</p>
+        </div>
+        <div class="q">
+          <h4>Can it run inside our infrastructure?</h4>
+          <p>Yes. Deploy in your VPC or fully self-hosted. The model is a single container with no external calls — no data leaves your network, no egress costs, no third-party subprocessor.</p>
+        </div>
+        <div class="q">
+          <h4>What's the failure mode?</h4>
+          <p>Verdict can only return one of the options you supplied, in a fixed schema. It cannot invent a category or emit free text. When confidence falls below your threshold, it returns <code>escalate: true</code> instead of guessing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE TEASERS -->
+  <section class="band alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">Proof</div>
+        <h2>What it looks like in production.</h2>
+      </div>
+      <div class="cases">
+        <div class="case-card" onclick="go('case')">
+          <div class="co">Ledgerline · Payments</div>
+          <h4>Fraud review time cut from 4 hours to 90 seconds</h4>
+          <div class="big">-62%</div>
+          <div class="big-lbl">false positives blocking good customers</div>
+          <div class="more">Read the case study →</div>
+        </div>
+        <div class="case-card" onclick="alert('Second case study would open here.')">
+          <div class="co">Meridian Health · Claims</div>
+          <h4>Auto-adjudicating 340k claims a month without new rules</h4>
+          <div class="big">11×</div>
+          <div class="big-lbl">throughput per claims analyst</div>
+          <div class="more">Read the case study →</div>
+        </div>
+        <div class="case-card" onclick="alert('Third case study would open here.')">
+          <div class="co">Byteline · Support</div>
+          <h4>Ticket routing that adapts when the taxonomy changes</h4>
+          <div class="big">$0.031</div>
+          <div class="big-lbl">cost per routed ticket, all-in</div>
+          <div class="more">Read the case study →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final" id="start">
+    <div class="wrap">
+      <h2>Run 10,000 decisions on your own data.</h2>
+      <p>No credit card, no sales call. Upload a sample, define your options, and see the calibration report in under ten minutes.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-lg" href="#" onclick="return false;">Start free trial</a>
+        <a class="btn btn-ghost btn-lg" href="#" onclick="go('calc');return false;">Estimate your savings →</a>
+      </div>
+      <div class="micro">SOC 2 Type II · GDPR · VPC or self-hosted deployment</div>
+    </div>
+  </section>
+</div>
+
+<!-- ================================================================
+     PAGE 2 — CASE STUDY
+================================================================= -->
+<div id="page-case" class="page">
+
+  <div class="cs-hero">
+    <div class="wrap">
+      <div class="crumb">
+        <a href="#" onclick="go('home');return false;">Platform</a>
+        <span class="sep">/</span>
+        <a href="#" onclick="return false;">Case studies</a>
+        <span class="sep">/</span>
+        <span style="color:#fff">Ledgerline</span>
+      </div>
+      <h1>How Ledgerline cut fraud review time from <em>4 hours to 90 seconds</em></h1>
+      <div class="cs-kpis">
+        <div class="cs-kpi"><span class="v g">-62%</span><span class="l">False positives</span></div>
+        <div class="cs-kpi"><span class="v">90s</span><span class="l">Median resolution</span></div>
+        <div class="cs-kpi"><span class="v">$1.4M</span><span class="l">Recovered revenue / yr</span></div>
+        <div class="cs-kpi"><span class="v">2.1M</span><span class="l">Decisions / month</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-body">
+    <div class="wrap cs-layout">
+
+      <!-- MAIN COLUMN -->
+      <article>
+        <p class="summary">
+          Ledgerline, a payments processor handling <strong>2.1 million monthly transactions</strong>,
+          was losing good customers to a fraud queue that took four hours to clear.
+          After a six-week evaluation, they replaced their rules engine and a prompted-LLM
+          pilot with Verdict — cutting median review time to <strong>90 seconds</strong>,
+          reducing false positives by <strong>62%</strong>, and recovering
+          <strong>$1.4M in annual revenue</strong> that had been leaking to over-blocking.
+        </p>
+
+        <blockquote class="pull">
+          <p>“We weren't choosing a model. We were choosing whether our analysts would still have a job in two years — and whether our good customers would still be here.”</p>
+          <cite><b>Dana Whitfield</b> · VP Risk Operations, Ledgerline</cite>
+        </blockquote>
+
+        <div class="cs-section">
+          <span class="lbl">01 — Situation</span>
+          <h3>A queue that grew faster than the team</h3>
+          <p>
+            Ledgerline's risk team had 14 analysts working a queue of roughly 9,000 flagged
+            transactions per day. Each review took a median of four hours end-to-end, and
+            the backlog meant most cases were resolved long after the customer had already
+            abandoned the purchase.
+          </p>
+          <p>
+            The cost wasn't just operational. Roughly one in five holds turned out to be a
+            legitimate customer — and Ledgerline's own data showed that a customer who
+            experiences a fraud hold is <b>3.4× more likely</b> to churn within 90 days.
+          </p>
+        </div>
+
+        <div class="cs-section">
+          <span class="lbl">02 — Evaluation</span>
+          <h3>Four options, three criteria that mattered</h3>
+          <p>
+            The team spent six weeks evaluating four approaches. They were explicit about
+            what would make them walk away:
+          </p>
+          <ul>
+            <li><b>p99 latency under 200ms.</b> Anything slower couldn't sit inline in the authorization path — it would have to stay async, which defeats the purpose.</li>
+            <li><b>No hallucinated output formats.</b> The downstream system parses a strict schema. A single malformed response at 3am pages an on-call engineer.</li>
+            <li><b>Adding a new decline reason without retraining.</b> Their fraud taxonomy changed roughly every six weeks. A model that needed a training cycle for each change was a non-starter.</li>
+          </ul>
+          <p>
+            A prompted LLM passed the flexibility test but failed on latency (p99 ~6.4s) and
+            output reliability (71% parseable in their harness). Expanding the rules engine
+            passed latency but failed the adaptability test — the rule tree was already
+            4,000 branches deep. A fine-tuned classifier passed latency and reliability but
+            required a retraining cycle for every taxonomy change.
+          </p>
+          <p>
+            Verdict was the only option that cleared all three criteria in the pilot.
+          </p>
+        </div>
+
+        <div class="cs-section">
+          <span class="lbl">03 — Result</span>
+          <h3>Ninety seconds, and a queue that clears itself</h3>
+          <p>
+            Ledgerline deployed Verdict inside their own VPC, inline in the authorization
+            path. Low-confidence decisions still escalate to a human — but that's now
+            roughly <b>8% of volume</b> instead of 100%.
+          </p>
+
+          <div class="stat-grid">
+            <div class="stat">
+              <span class="v">-62%</span>
+              <span class="l">False positives in the first 90 days</span>
+            </div>
+            <div class="stat">
+              <span class="v">90s</span>
+              <span class="l">Median time to resolution</span>
+            </div>
+            <div class="stat">
+              <span class="v">8%</span>
+              <span class="l">Volume still escalated to humans</span>
+            </div>
+          </div>
+
+          <p>
+            The team also stopped shipping rule changes through engineering. Risk analysts
+            now modify the options array directly through a config surface — the fraud
+            taxonomy has changed five times since launch with no model retraining and no
+            deployment.
+          </p>
+
+          <div class="ba">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Before</th>
+                  <th>After</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="metric-name">Median resolution time</td>
+                  <td class="before">4h 12m</td>
+                  <td class="after">1m 30s</td>
+                </tr>
+                <tr>
+                  <td class="metric-name">False positive rate</td>
+                  <td class="before">19.4%</td>
+                  <td class="after">7.4%</td>
+                </tr>
+                <tr>
+                  <td class="metric-name">Cost per decision</td>
+                  <td class="before">$0.86</td>
+                  <td class="after">$0.04</td>
+                </tr>
+                <tr>
+                  <td class="metric-name">Taxonomy change cycle</td>
+                  <td class="before">6 weeks</td>
+                  <td class="after">Same day</td>
+                </tr>
+                <tr>
+                  <td class="metric-name">Analyst headcount on queue</td>
+                  <td class="before">14</td>
+                  <td class="after">4</td>
+                </tr>
+                <tr>
+                  <td class="metric-name">p99 decision latency</td>
+                  <td class="before">6,400ms</td>
+                  <td class="after">140ms</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            The 10 analysts who moved off the queue were redeployed to complex case
+            investigation — work that had been perpetually deprioritized. Ledgerline
+            reports that the team now closes roughly <b>3× more high-value investigations</b>
+            per quarter than before the migration.
+          </p>
+        </div>
+
+        <div class="cs-section">
+          <span class="lbl">Next</span>
+          <h3>See how this works for fraud triage</h3>
+          <p style="margin-bottom:22px">
+            Bring a sample of your own flagged transactions and define your option set.
+            You'll get a calibration report before you talk to anyone.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#" onclick="go('calc');return false;">Estimate your savings →</a>
+            <a class="btn btn-ghost" href="#" onclick="go('home');return false;">Read the architecture paper</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- SIDEBAR -->
+      <aside class="side">
+        <div class="side-card">
+          <h5>Company snapshot</h5>
+          <div class="side-row"><span class="k">Company</span><span class="v">Ledgerline</span></div>
+          <div class="side-row"><span class="k">Industry</span><span class="v">Payments</span></div>
+          <div class="side-row"><span class="k">Employees</span><span class="v">400</span></div>
+          <div class="side-row"><span class="k">Decision volume</span><span class="v">2.1M / mo</span></div>
+          <div class="side-row"><span class="k">Use case</span><span class="v">Fraud triage</span></div>
+          <div class="side-row"><span class="k">Stack</span><span class="v">Go · Kafka · Postgres</span></div>
+          <div class="side-row"><span class="k">Deployment</span><span class="v">Self-hosted VPC</span></div>
+          <div class="side-row"><span class="k">Time to launch</span><span class="v">6 weeks</span></div>
+        </div>
+
+        <div class="side-card side-cta">
+          <h5>Build your business case</h5>
+          <p>Plug in your decision volume and current cost per decision to see projected savings.</p>
+          <a class="btn btn-primary" href="#" onclick="go('calc');return false;">Open calculator</a>
+        </div>
+
+        <div class="side-card">
+          <h5>More case studies</h5>
+          <div class="side-row" style="cursor:pointer">
+            <span class="k">Meridian Health</span><span class="v">11× →</span>
+          </div>
+          <div class="side-row" style="cursor:pointer">
+            <span class="k">Byteline</span><span class="v">$0.031 →</span>
+          </div>
+          <div class="side-row" style="cursor:pointer">
+            <span class="k">Arcadia Logistics</span><span class="v">-44% →</span>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 3 — ROI CALCULATOR
+================================================================= -->
+<div id="page-calc" class="page">
+
+  <div class="calc-hero">
+    <div class="wrap">
+      <div class="crumb" style="color:var(--muted-2);margin-bottom:18px">
+        <a href="#" onclick="go('home');return false;">Platform</a>
+        <span class="sep">/</span>
+        <span>ROI calculator</span>
+      </div>
+      <h1>Build your business case in 30 seconds.</h1>
+      <p>Adjust the inputs to match your operation. Everything updates live — screenshot the result and paste it into your internal proposal.</p>
+    </div>
+  </div>
+
+  <div class="wrap calc-grid">
+
+    <!-- INPUTS -->
+    <div class="panel">
+      <h3>Your current operation</h3>
+      <p class="sub">// drag or type to adjust</p>
+
+      <div class="field">
+        <label>Decisions per month</label>
+        <input type="range" id="volumeRange" min="10000" max="5000000" step="10000" value="250000">
+        <div class="num-input">
+          <span>#</span>
+          <input type="number" id="volume" value="250000" min="1000" step="1000">
+        </div>
+        <div class="hint" id="volumeHint">250,000 decisions / month</div>
+      </div>
+
+      <div class="field">
+        <label>Current cost per decision</label>
+        <input type="range" id="costRange" min="0.01" max="5" step="0.01" value="0.85">
+        <div class="num-input">
+          <span>$</span>
+          <input type="number" id="cost" value="0.85" min="0.01" step="0.01">
+        </div>
+        <div class="hint">Include analyst time, tooling and infra</div>
+      </div>
+
+      <div class="field">
+        <label>Verdict rate per 1,000 decisions</label>
+        <input type="range" id="rateRange" min="0.01" max="0.20" step="0.005" value="0.04">
+        <div class="num-input">
+          <span>$</span>
+          <input type="number" id="rate" value="0.04" min="0.01" step="0.005">
+        </div>
+        <div class="hint">List price $0.04 · volume tiers to $0.018</div>
+      </div>
+
+      <div class="field">
+        <label>Monthly platform fee</label>
+        <div class="num-input">
+          <span>$</span>
+          <input type="number" id="platform" value="0" min="0" step="100">
+        </div>
+        <div class="hint">Set to 0 for usage-only pricing</div>
+      </div>
+
+      <div class="calc-note">
+        <b>Note:</b> these are directional estimates. Your actual numbers depend on
+        escalation thresholds, deployment topology and contract tier.
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div>
+      <div class="results">
+        <div class="result hero-res">
+          <div class="rl">Projected annual savings</div>
+          <div class="rv" id="annualSavings">$2,430,000</div>
+          <div class="rs" id="annualSub">Based on 250,000 decisions/month at $0.85 today</div>
+        </div>
+
+        <div class="result">
+          <div class="rl">Monthly savings</div>
+          <div class="rv" id="monthlySavings">$202,500</div>
+          <div class="rs" id="monthlySub">Net of Verdict spend</div>
+        </div>
+
+        <div class="result">
+          <div class="rl">Cost reduction</div>
+          <div class="rv" id="reduction">95.3%</div>
+          <div class="rs">Per-decision cost, before vs. after</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Cost comparison</h3>
+        <p class="sub">// monthly, all-in</p>
+
+        <div class="bars">
+          <div class="bar-row">
+            <div class="bl">
+              <span>Current cost</span>
+              <span class="bv old" id="barOldLabel">$212,500 / mo</span>
+            </div>
+            <div class="bar"><i class="old" id="barOld" style="width:100%"></i></div>
+          </div>
+
+          <div class="bar-row">
+            <div class="bl">
+              <span>With Verdict</span>
+              <span class="bv new" id="barNewLabel">$10,000 / mo</span>
+            </div>
+            <div class="bar"><i class="new" id="barNew" style="width:5%"></i></div>
+          </div>
+        </div>
+
+        <div class="ba" style="margin-top:34px">
+          <table>
+            <thead>
+              <tr><th>Line item</th><th>Current</th><th>With Verdict</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="metric-name">Monthly decision cost</td>
+                <td class="before" id="tblOld">$212,500</td>
+                <td class="after" id="tblNew">$10,000</td>
+              </tr>
+              <tr>
+                <td class="metric-name">Annual decision cost</td>
+                <td class="before" id="tblOldYr">$2,550,000</td>
+                <td class="after" id="tblNewYr">$120,000</td>
+              </tr>
+              <tr>
+                <td class="metric-name">Cost per decision</td>
+                <td class="before" id="tblOldUnit">$0.8500</td>
+                <td class="after" id="tblNewUnit">$0.0400</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="cta-row" style="margin-top:26px">
+        <a class="btn btn-primary btn-lg" href="#" onclick="return false;">Start 10,000-decision trial</a>
+        <a class="btn btn-ghost btn-lg" href="#" onclick="go('case');return false;">See a real deployment →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand" style="color:#fff">
+          <span class="brand-mark">V</span> Verdict
+        </div>
+        <p>Decision infrastructure for automated operations. Calibrated, schema-valid judgments at production scale.</p>
+      </div>
+      <div>
+        <h5>Product</h5>
+        <ul>
+          <li><a href="#" onclick="go('home');return false;">Platform</a></li>
+          <li><a href="#" onclick="go('home');return false;">Benchmarks</a></li>
+          <li><a href="#" onclick="go('calc');return false;">ROI calculator</a></li>
+          <li><a href="#" onclick="return false;">Pricing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#" onclick="return false;">Architecture paper</a></li>
+          <li><a href="#" onclick="go('case');return false;">Case studies</a></li>
+          <li><a href="#" onclick="return false;">API reference</a></li>
+          <li><a href="#" onclick="return false;">Status</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#" onclick="return false;">About</a></li>
+          <li><a href="#" onclick="return false;">Security</a></li>
+          <li><a href="#" onclick="return false;">Careers</a></li>
+          <li><a href="#" onclick="return false;">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2025 Verdict Labs, Inc. — Prototype, not a live product.</span>
+      <span>SOC 2 Type II · GDPR · VPC &amp; self-hosted</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- PAGE ROUTER ---------- */
+function go(page){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('[data-nav]').forEach(b => {
+    b.classList.toggle('on', b.dataset.nav === page);
+  });
+  window.scrollTo({top:0, behavior:'instant'});
+}
+document.querySelector('[data-nav="home"]').classList.add('on');
+
+/* ---------- CALCULATOR ---------- */
+const vol       = document.getElementById('volume');
+const volRange  = document.getElementById('volumeRange');
+const cost      = document.getElementById('cost');
+const costRange = document.getElementById('costRange');
+const rate      = document.getElementById('rate');
+const rateRange = document.getElementById('rateRange');
+const platform  = document.getElementById('platform');
+
+function money(n, dec){
+  dec = dec === undefined ? 0 : dec;
+  return '$' + n.toLocaleString('en-US', {minimumFractionDigits:dec, maximumFractionDigits:dec});
+}
+function compact(n){
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n/1e3) + 'k';
+  return money(n);
+}
+
+function calc(){
+  const v  = Math.max(1, Number(vol.value) || 0);
+  const c  = Math.max(0.001, Number(cost.value) || 0);
+  const r  = Math.max(0.001, Number(rate.value) || 0);
+  const pf = Math.max(0, Number(platform.value) || 0);
+
+  const oldMonthly = v * c;
+  const newMonthly = (v / 1000) * r + pf;
+
+  const monthlySave = oldMonthly - newMonthly;
+  const annualSave  = monthlySave * 12;
+  const reduction   = oldMonthly > 0 ? (1 - newMonthly / oldMonthly) * 100 : 0;
+
+  const newUnit = newMonthly / v;
+
+  /* hero result */
+  document.getElementById('annualSavings').textContent =
+    annualSave >= 0 ? compact(annualSave) : '-' + compact(Math.abs(annualSave));
+  document.getElementById('annualSub').textContent =
+    'Based on ' + v.toLocaleString() + ' decisions/month at ' + money(c,2) + ' today';
+
+  document.getElementById('monthlySavings').textContent =
+    monthlySave >= 0 ? compact(monthlySave) : '-' + compact(Math.abs(monthlySave));
+  document.getElementById('monthlySub').textContent =
+    'Net of ' + compact(newMonthly) + ' in Verdict spend';
+
+  document.getElementById('reduction').textContent =
+    (reduction >= 0 ? reduction.toFixed(1) : '0.0') + '%';
+
+  /* bars */
+  const max = Math.max(oldMonthly, newMonthly) || 1;
+  const oldPct = (oldMonthly / max) * 100;
+  const newPct = Math.max(1.5, (newMonthly / max) * 100);
+
+  document.getElementById('barOld').style.width = oldPct + '%';
+  document.getElementById('barNew').style.width = newPct + '%';
+  document.getElementById('barOldLabel').textContent = compact(oldMonthly) + ' / mo';
+  document.getElementById('barNewLabel').textContent = compact(newMonthly) + ' / mo';
+
+  /* table */
+  document.getElementById('tblOld').textContent   = money(oldMonthly);
+  document.getElementById('tblNew').textContent   = money(newMonthly);
+  document.getElementById('tblOldYr').textContent = money(oldMonthly * 12);
+  document.getElementById('tblNewYr').textContent = money(newMonthly * 12);
+  document.getElementById('tblOldUnit').textContent = money(c, 4);
+  document.getElementById('tblNewUnit').textContent = money(newUnit, 4);
+
+  /* hint */
+  document.getElementById('volumeHint').textContent =
+    v.toLocaleString() + ' decisions / month';
+}
+
+/* range <-> number syncing */
+function bind(rangeEl, numEl){
+  rangeEl.addEventListener('input', () => {
+    numEl.value = rangeEl.value;
+    calc();
+  });
+  numEl.addEventListener('input', () => {
+    const v = Number(numEl.value);
+    if (!isNaN(v)) rangeEl.value = v;
+    calc();
+  });
+}
+bind(volRange, vol);
+bind(costRange, cost);
+bind(rateRange, rate);
+platform.addEventListener('input', calc);
+
+calc();
+</script>
+</body>
+</html>

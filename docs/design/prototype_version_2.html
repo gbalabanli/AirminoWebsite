@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepSeek Nexus Engine | Enterprise Compute & AI Infrastructure</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind Configuration for DeepSeek Light Theme -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dsnavy: {
+              950: '#060A12',
+              900: '#0F172A',
+              800: '#1E293B',
+              700: '#334155',
+              600: '#475569',
+            },
+            dsblue: {
+              50: '#EFF6FF',
+              100: '#DBEAFE',
+              200: '#BFDBFE',
+              400: '#60A5FA',
+              500: '#3B82F6',
+              600: '#0066FF',
+              700: '#1D4ED8',
+            },
+            dscyan: {
+              50: '#ECFEFF',
+              100: '#CFFAFE',
+              300: '#67E8F9',
+              400: '#22D3EE',
+              500: '#00D8FF',
+            },
+            dsslate: {
+              50: '#F8FAFC',
+              100: '#F1F5F9',
+              200: '#E2E8F0',
+              300: '#CBD5E1',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8FAFC;
+      color: #0F172A;
+      overflow-x: hidden;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .font-heading {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    }
+    .gradient-ds-text {
+      background: linear-gradient(135deg, #0066FF 0%, #00D8FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gradient-ds-bg {
+      background: linear-gradient(135deg, #0066FF 0%, #00B2FF 100%);
+    }
+    .ds-light-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+    }
+    .ds-light-card:hover {
+      border-color: #BFDBFE;
+      box-shadow: 0 10px 30px -4px rgba(0, 102, 255, 0.1);
+    }
+    .ds-glow-subtle {
+      box-shadow: 0 0 40px -10px rgba(0, 102, 255, 0.15);
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0066FF;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-dsblue-100 selection:text-dsblue-700">
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-white/90 border-b border-dsslate-200 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
+        <div class="w-9 h-9 rounded-xl gradient-ds-bg flex items-center justify-center font-bold text-white shadow-md shadow-dsblue-600/30">
+          <i class="fa-solid fa-brain text-lg"></i>
+        </div>
+        <span class="font-heading font-extrabold text-xl tracking-tight text-dsnavy-900">DeepSeek<span class="text-dsblue-600">Nexus</span></span>
+        <span class="hidden sm:flex items-center gap-1.5 text-[11px] bg-dsblue-50 text-dsblue-700 font-mono font-semibold px-2.5 py-0.5 rounded-full border border-dsblue-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-dsblue-600 animate-ping"></span> Enterprise v3.0
+        </span>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1 bg-dsslate-100 p-1.5 rounded-xl border border-dsslate-200 text-sm font-medium">
+        <button id="nav-home" onclick="switchView('home')" class="px-4 py-1.5 rounded-lg transition-all bg-white text-dsblue-600 shadow-sm border border-dsslate-200 font-semibold">
+          <i class="fa-solid fa-cube mr-2 text-dsblue-600"></i>Platform Overview
+        </button>
+        <button id="nav-casestudy" onclick="switchView('casestudy')" class="px-4 py-1.5 text-dsnavy-700 hover:text-dsblue-600 rounded-lg transition-all hover:bg-white/60">
+          <i class="fa-solid fa-chart-line mr-2 text-dscyan-500"></i>Case Study (STAR-M)
+        </button>
+      </nav>
+
+      <!-- CTAs & View Controls -->
+      <div class="flex items-center gap-3">
+        <a href="#playground" onclick="switchView('home')" class="hidden lg:inline-flex text-sm font-medium text-dsnavy-700 hover:text-dsblue-600 transition">
+          Docs & API
+        </a>
+        <button onclick="switchView('casestudy')" class="hidden sm:inline-flex px-3.5 py-2 rounded-lg text-xs font-bold border border-dsblue-200 text-dsblue-700 bg-dsblue-50 hover:bg-dsblue-100 transition">
+          Read Case Study
+        </button>
+        <button onclick="openModal('Get Started Free')" class="px-4 py-2 rounded-lg text-sm font-bold gradient-ds-bg text-white hover:opacity-95 transition-all shadow-md shadow-dsblue-600/20 active:scale-95 flex items-center gap-2">
+          <span>Get Started Free</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================================= -->
+  <!-- VIEW 1: MAIN HOMEPAGE LANDING PAGE (LIGHT THEME) -->
+  <!-- ========================================================================================= -->
+  <main id="view-home" class="flex-grow">
+    
+    <!-- HERO SECTION -->
+    <section class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-gradient-to-b from-white via-dsslate-50 to-dsslate-100 border-b border-dsslate-200">
+      <!-- Soft Icy Blue Ambient Glows -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-dsblue-200/40 blur-[130px] rounded-full pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Left: Hero Headline & CTAs -->
+          <div class="lg:col-span-6 text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-dsblue-50 border border-dsblue-200 text-xs font-mono font-semibold text-dsblue-700 mb-6">
+              <span class="w-2 h-2 rounded-full bg-dscyan-500 animate-pulse"></span>
+              Ultra-Low Latency Inference & Distributed Sync
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-heading tracking-tight leading-[1.12] text-dsnavy-900">
+              Enterprise-Grade Compute for <span class="gradient-ds-text">Scale & AI Workloads</span>.
+            </h1>
+            
+            <p class="mt-6 text-lg text-dsnavy-700 leading-relaxed font-normal">
+              DeepSeek Nexus abstracts complex microservice sync into sub-10ms global APIs. Cut engineering overhead by 65% with zero-downtime consensus and enterprise SOC2 compliance built-in.
+            </p>
+
+            <!-- Dual CTAs -->
+            <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <button onclick="openModal('Start Free Integration')" class="px-6 py-3.5 rounded-xl font-bold gradient-ds-bg text-white shadow-lg shadow-dsblue-600/25 hover:shadow-xl hover:shadow-dsblue-600/35 transition-all flex items-center justify-center gap-2">
+                <span>Start Integration Free</span>
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+              </button>
+              <button onclick="openModal('Book Architecture Demo')" class="px-6 py-3.5 rounded-xl font-bold bg-white text-dsnavy-800 border border-dsslate-300 hover:bg-dsslate-50 hover:border-dsblue-300 transition-all flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-calendar-check text-dsblue-600"></i>
+                <span>Book Architecture Demo</span>
+              </button>
+            </div>
+
+            <!-- Micro Metrics -->
+            <div class="mt-10 pt-8 border-t border-dsslate-200 grid grid-cols-3 gap-4">
+              <div>
+                <p class="text-2xl font-extrabold text-dsnavy-900 font-mono">&lt; 8.5ms</p>
+                <p class="text-xs text-dsnavy-600 font-medium mt-1">Global P99 Latency</p>
+              </div>
+              <div>
+                <p class="text-2xl font-extrabold text-dsnavy-900 font-mono">99.999%</p>
+                <p class="text-xs text-dsnavy-600 font-medium mt-1">SLA Guaranteed</p>
+              </div>
+              <div>
+                <p class="text-2xl font-extrabold text-dsnavy-900 font-mono">250k+</p>
+                <p class="text-xs text-dsnavy-600 font-medium mt-1">Req/Sec Cluster Node</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Sleek Dark Navy Code Window inside Light Theme -->
+          <div class="lg:col-span-6">
+            <div class="rounded-2xl bg-dsnavy-950 border border-dsnavy-800 shadow-2xl overflow-hidden glow-ds-subtle">
+              <!-- Window Bar -->
+              <div class="bg-dsnavy-900 px-4 py-3 border-b border-dsnavy-800 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                  <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                  <span class="w-3 h-3 rounded-full bg-dscyan-400 inline-block"></span>
+                  <span class="ml-2 text-xs font-mono text-slate-400">deepseek-nexus-sdk</span>
+                </div>
+                <!-- Language Selector -->
+                <div class="flex items-center gap-1 bg-dsnavy-950 p-1 rounded-lg border border-dsnavy-800 font-mono text-xs">
+                  <button onclick="setHeroCode('ts')" id="lang-ts" class="px-2.5 py-1 rounded bg-dsblue-600 text-white font-medium">TypeScript</button>
+                  <button onclick="setHeroCode('py')" id="lang-py" class="px-2.5 py-1 rounded text-slate-400 hover:text-slate-200">Python</button>
+                  <button onclick="setHeroCode('go')" id="lang-go" class="px-2.5 py-1 rounded text-slate-400 hover:text-slate-200">Go</button>
+                  <button onclick="setHeroCode('curl')" id="lang-curl" class="px-2.5 py-1 rounded text-slate-400 hover:text-slate-200">cURL</button>
+                </div>
+              </div>
+
+              <!-- Code Display -->
+              <div class="p-5 font-mono text-xs sm:text-sm bg-dsnavy-950 text-slate-300 overflow-x-auto min-h-[250px] relative">
+                <button onclick="copyHeroCode()" class="absolute top-4 right-4 bg-dsnavy-800 hover:bg-dsblue-600 text-slate-200 p-2 rounded-lg border border-slate-700 transition">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+                <pre id="hero-code-block"><code class="text-slate-300">// DeepSeek Nexus SDK Integration
+import { DeepSeekNexus } from '@deepseek/nexus-core';
+
+const dsClient = new DeepSeekNexus({
+  apiKey: process.env.DEEPSEEK_SECRET_KEY,
+  region: 'us-east-cluster',
+  mode: 'high-throughput-v3'
+});
+
+// Trigger real-time distributed state execution
+const response = await dsClient.pipeline.execute({
+  streamId: 'str_prod_sync_8890',
+  payload: { entityId: 'usr_00921', transactionVal: 85000 },
+  consensus: 'ultra-fast'
+});
+
+console.log(`Executed with latency: ${response.latencyMs}ms`);</code></pre>
+              </div>
+
+              <!-- Code Output Status Footer -->
+              <div class="bg-dsnavy-900 border-t border-dsnavy-800 px-4 py-2.5 flex items-center justify-between text-xs font-mono">
+                <div class="flex items-center gap-2 text-dscyan-400">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <span>Live Gateway Status: Active (6ms)</span>
+                </div>
+                <span class="text-slate-400">Protocol: HTTP/3 mTLS</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL PROOF & ENTERPRISE TRUST -->
+    <section class="py-12 bg-white border-b border-dsslate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p class="text-center text-xs font-mono font-semibold uppercase tracking-widest text-dsnavy-600 mb-8">
+          Trusted by High-Growth Engineering Teams Worldwide
+        </p>
+        
+        <!-- Logo Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center opacity-70 grayscale hover:grayscale-0 transition-all">
+          <div class="flex items-center gap-2 font-extrabold text-dsnavy-700 text-lg font-heading"><i class="fa-solid fa-bolt text-dsblue-600"></i> FINFLOW</div>
+          <div class="flex items-center gap-2 font-extrabold text-dsnavy-700 text-lg font-heading"><i class="fa-solid fa-layer-group text-dsblue-600"></i> STACKSCALE</div>
+          <div class="flex items-center gap-2 font-extrabold text-dsnavy-700 text-lg font-heading"><i class="fa-solid fa-shield-halved text-dsblue-600"></i> SECUREAI</div>
+          <div class="flex items-center gap-2 font-extrabold text-dsnavy-700 text-lg font-heading"><i class="fa-solid fa-network-wired text-dsblue-600"></i> NEXUSPAY</div>
+          <div class="flex items-center gap-2 font-extrabold text-dsnavy-700 text-lg font-heading"><i class="fa-solid fa-cube text-dsblue-600"></i> CLOUDGRID</div>
+          <div class="flex items-center gap-2 font-extrabold text-dsnavy-700 text-lg font-heading"><i class="fa-solid fa-database text-dsblue-600"></i> DATACORE</div>
+        </div>
+
+        <!-- Security Compliance Badges -->
+        <div class="mt-10 pt-8 border-t border-dsslate-200 flex flex-wrap justify-center items-center gap-6 text-xs font-mono text-dsnavy-700">
+          <span class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-dsslate-100 border border-dsslate-200"><i class="fa-solid fa-shield-cat text-dsblue-600"></i> SOC2 Type II Certified</span>
+          <span class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-dsslate-100 border border-dsslate-200"><i class="fa-solid fa-lock text-dsblue-600"></i> ISO27001 Compliant</span>
+          <span class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-dsslate-100 border border-dsslate-200"><i class="fa-solid fa-globe text-dsblue-600"></i> GDPR Ready</span>
+          <span class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-dsslate-100 border border-dsslate-200"><i class="fa-solid fa-server text-dsblue-600"></i> 99.999% SLA Uptime</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE ARCHITECTURE DIAGRAM -->
+    <section class="py-20 bg-dsslate-50 border-b border-dsslate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-mono font-bold text-dsblue-600 uppercase tracking-widest bg-dsblue-50 px-3 py-1 rounded-full border border-dsblue-200">How It Fits Your Stack</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-dsnavy-900 mt-3">
+            Seamless Non-Disruptive Integration
+          </h2>
+          <p class="mt-4 text-dsnavy-700 text-base">
+            Click any architecture layer below to inspect latency benchmarks, security isolation, and data payload mechanics.
+          </p>
+        </div>
+
+        <!-- Architecture Grid -->
+        <div class="grid lg:grid-cols-12 gap-8 items-stretch">
+          
+          <!-- Stack Node List -->
+          <div class="lg:col-span-7 space-y-4">
+            
+            <div onclick="selectArchNode('sdk')" id="node-sdk" class="cursor-pointer p-5 rounded-xl bg-white border-2 border-dsblue-600 shadow-md flex items-center justify-between group transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-dsblue-50 border border-dsblue-200 flex items-center justify-center text-dsblue-600 font-bold">
+                  <i class="fa-solid fa-code"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-dsnavy-900 font-heading">SDK & Client Application Layer</h4>
+                  <p class="text-xs text-dsnavy-600">TypeScript, Python, Go, Rust, or gRPC endpoints</p>
+                </div>
+              </div>
+              <span class="text-xs font-mono font-bold bg-dsblue-50 text-dsblue-700 px-3 py-1 rounded-lg border border-dsblue-200">Layer 1</span>
+            </div>
+
+            <div onclick="selectArchNode('core')" id="node-core" class="cursor-pointer p-5 rounded-xl bg-white border border-dsslate-200 hover:border-dsblue-300 flex items-center justify-between group transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-dsslate-100 border border-dsslate-200 flex items-center justify-center text-dsblue-600 font-bold">
+                  <i class="fa-solid fa-microchip"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-dsnavy-900 font-heading">DeepSeek Orchestration Core</h4>
+                  <p class="text-xs text-dsnavy-600">Distributed Raft state consensus & sub-8ms queueing</p>
+                </div>
+              </div>
+              <span class="text-xs font-mono bg-dsslate-100 text-dsnavy-700 px-3 py-1 rounded-lg border border-dsslate-200">Layer 2</span>
+            </div>
+
+            <div onclick="selectArchNode('security')" id="node-security" class="cursor-pointer p-5 rounded-xl bg-white border border-dsslate-200 hover:border-dsblue-300 flex items-center justify-between group transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-dsslate-100 border border-dsslate-200 flex items-center justify-center text-dsblue-600 font-bold">
+                  <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-dsnavy-900 font-heading">Enterprise Security & Isolation</h4>
+                  <p class="text-xs text-dsnavy-600">Private VPC Peering, mTLS, and zero-trust token auth</p>
+                </div>
+              </div>
+              <span class="text-xs font-mono bg-dsslate-100 text-dsnavy-700 px-3 py-1 rounded-lg border border-dsslate-200">Layer 3</span>
+            </div>
+
+            <div onclick="selectArchNode('sink')" id="node-sink" class="cursor-pointer p-5 rounded-xl bg-white border border-dsslate-200 hover:border-dsblue-300 flex items-center justify-between group transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-dsslate-100 border border-dsslate-200 flex items-center justify-center text-dsblue-600 font-bold">
+                  <i class="fa-solid fa-database"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-dsnavy-900 font-heading">Enterprise Data Sink</h4>
+                  <p class="text-xs text-dsnavy-600">PostgreSQL, Redis, Snowflake, and Vector DB Sync</p>
+                </div>
+              </div>
+              <span class="text-xs font-mono bg-dsslate-100 text-dsnavy-700 px-3 py-1 rounded-lg border border-dsslate-200">Layer 4</span>
+            </div>
+
+          </div>
+
+          <!-- Inspector Panel -->
+          <div class="lg:col-span-5 ds-light-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 text-xs font-mono font-bold text-dsblue-600 uppercase tracking-wider mb-2">
+                <i class="fa-solid fa-sliders"></i> Node Inspector
+              </div>
+              
+              <h3 id="arch-title" class="text-2xl font-bold font-heading text-dsnavy-900 mb-2">SDK & Client Layer</h3>
+              <p id="arch-desc" class="text-sm text-dsnavy-700 mb-6 leading-relaxed">
+                Lightweight client SDK wrappers available for Python, TypeScript, Go, and Rust. Features local state caching and automated retry mechanics.
+              </p>
+
+              <div class="space-y-3 font-mono text-xs">
+                <div class="p-3 bg-dsslate-50 rounded-xl border border-dsslate-200 flex justify-between">
+                  <span class="text-dsnavy-600">Client Overhead:</span>
+                  <span id="arch-spec-1" class="text-dsblue-700 font-bold">&lt; 0.4ms Local Wrapper</span>
+                </div>
+                <div class="p-3 bg-dsslate-50 rounded-xl border border-dsslate-200 flex justify-between">
+                  <span class="text-dsnavy-600">Transport:</span>
+                  <span id="arch-spec-2" class="text-dsnavy-900 font-bold">gRPC / HTTP3 Streaming</span>
+                </div>
+                <div class="p-3 bg-dsslate-50 rounded-xl border border-dsslate-200 flex justify-between">
+                  <span class="text-dsnavy-600">Fallback:</span>
+                  <span id="arch-spec-3" class="text-dsnavy-900 font-bold">Automatic Offline Queue</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-dsslate-200 flex items-center justify-between">
+              <span class="text-xs font-medium text-dsnavy-600">Need private VPC deployment?</span>
+              <button onclick="openModal('Private VPC Inquiry')" class="text-xs font-bold text-dsblue-600 hover:text-dsblue-700">
+                Contact Enterprise Specs &rarr;
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DYNAMIC TCO CALCULATOR -->
+    <section class="py-20 bg-white border-b border-dsslate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-mono font-bold text-dsblue-600 uppercase tracking-widest bg-dsblue-50 px-3 py-1 rounded-full border border-dsblue-200">Financial Modeling</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-dsnavy-900 mt-3">
+            In-House vs. DeepSeek TCO Calculator
+          </h2>
+          <p class="mt-4 text-dsnavy-700 text-base">
+            Calculate your annual engineering cost savings by replacing custom-built backend infrastructure with DeepSeek's managed platform.
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-stretch">
+          <!-- Input Sliders Panel -->
+          <div class="lg:col-span-7 bg-dsslate-50 border border-dsslate-200 rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
+            <h3 class="text-lg font-bold font-heading text-dsnavy-900 mb-6 flex items-center gap-2">
+              <i class="fa-solid fa-calculator text-dsblue-600"></i> Engineering Team Inputs
+            </h3>
+
+            <div class="space-y-6">
+              <!-- Slider 1 -->
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="text-sm font-semibold text-dsnavy-800">Engineers Required for Build</label>
+                  <span id="val-engineers" class="text-dsblue-700 font-mono font-bold text-sm bg-white px-3 py-1 rounded-lg border border-dsslate-200">3 Engineers</span>
+                </div>
+                <input type="range" id="input-engineers" min="1" max="10" value="3" oninput="updateCalculator()" class="w-full accent-dsblue-600 bg-dsslate-200 rounded-lg h-2 cursor-pointer">
+              </div>
+
+              <!-- Slider 2 -->
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="text-sm font-semibold text-dsnavy-800">Senior Engineer Hourly Rate</label>
+                  <span id="val-salary" class="text-dsblue-700 font-mono font-bold text-sm bg-white px-3 py-1 rounded-lg border border-dsslate-200">$85 / hr</span>
+                </div>
+                <input type="range" id="input-salary" min="50" max="150" step="5" value="85" oninput="updateCalculator()" class="w-full accent-dsblue-600 bg-dsslate-200 rounded-lg h-2 cursor-pointer">
+              </div>
+
+              <!-- Slider 3 -->
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="text-sm font-semibold text-dsnavy-800">Estimated Months to Build In-House</label>
+                  <span id="val-months" class="text-dsblue-700 font-mono font-bold text-sm bg-white px-3 py-1 rounded-lg border border-dsslate-200">5 Months</span>
+                </div>
+                <input type="range" id="input-months" min="2" max="12" value="5" oninput="updateCalculator()" class="w-full accent-dsblue-600 bg-dsslate-200 rounded-lg h-2 cursor-pointer">
+              </div>
+            </div>
+
+            <!-- Comparison Bar Graphic -->
+            <div class="mt-8 pt-6 border-t border-dsslate-200">
+              <span class="text-xs font-mono uppercase text-dsnavy-600 font-bold">Relative Cost Comparison</span>
+              <div class="mt-3 h-5 bg-dsslate-200 rounded-full overflow-hidden flex border border-dsslate-300">
+                <div id="bar-inhouse" class="bg-rose-500 transition-all duration-300" style="width: 88%;"></div>
+                <div id="bar-deepseek" class="bg-dsblue-600 transition-all duration-300" style="width: 12%;"></div>
+              </div>
+              <div class="flex justify-between text-xs font-mono font-semibold mt-2">
+                <span class="text-rose-600">■ Custom In-House Overhead</span>
+                <span class="text-dsblue-600">■ DeepSeek Platform</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Savings Summary Card -->
+          <div class="lg:col-span-5 bg-gradient-to-br from-dsnavy-900 to-dsnavy-950 text-white rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-xl">
+            <div>
+              <span class="text-xs font-mono text-dscyan-400 uppercase tracking-widest font-semibold">Calculated ROI Impact</span>
+              
+              <div class="mt-6 space-y-4">
+                <div class="p-4 bg-dsnavy-900 rounded-xl border border-dsnavy-800">
+                  <span class="text-xs text-slate-400">In-House Engineering Overhead</span>
+                  <p id="cost-in-house" class="text-2xl font-extrabold text-rose-400 font-mono mt-1">$217,600</p>
+                </div>
+
+                <div class="p-4 bg-dsnavy-900 rounded-xl border border-dsnavy-800">
+                  <span class="text-xs text-slate-400">DeepSeek Platform Subscription</span>
+                  <p id="cost-nexus" class="text-2xl font-extrabold text-dscyan-400 font-mono mt-1">$14,400</p>
+                </div>
+              </div>
+
+              <div class="mt-8 pt-6 border-t border-slate-800">
+                <span class="text-xs text-slate-400">Estimated Year-1 Net Savings</span>
+                <p id="net-savings" class="text-4xl font-extrabold text-white font-mono mt-1">$203,200</p>
+                <p class="text-xs text-dscyan-300 mt-2 font-medium">
+                  <i class="fa-solid fa-circle-check mr-1"></i> Time-to-Market accelerated by <span id="time-saved">4.5 months</span>
+                </p>
+              </div>
+            </div>
+
+            <button onclick="openModal('Export TCO Calculator Report')" class="mt-8 w-full py-3.5 gradient-ds-bg text-white font-bold rounded-xl transition shadow-md flex items-center justify-center gap-2">
+              <i class="fa-solid fa-download"></i>
+              <span>Export TCO Executive Summary</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- INTERACTIVE LIVE API PLAYGROUND -->
+    <section id="playground" class="py-20 bg-dsslate-50 border-b border-dsslate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-xs font-mono font-bold text-dsblue-600 uppercase tracking-widest bg-dsblue-50 px-3 py-1 rounded-full border border-dsblue-200">Live API Sandbox</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-dsnavy-900 mt-3">
+            Test the DeepSeek API Gateway
+          </h2>
+          <p class="mt-4 text-dsnavy-700 text-base">
+            Trigger real-time requests to the DeepSeek global edge network and measure latency in real time.
+          </p>
+        </div>
+
+        <div class="bg-white border border-dsslate-200 rounded-2xl overflow-hidden shadow-xl">
+          <!-- Request Bar Header -->
+          <div class="p-4 bg-dsslate-100 border-b border-dsslate-200 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <span class="bg-dsblue-600 text-white font-mono text-xs font-bold px-3 py-2 rounded-lg text-center">
+              POST
+            </span>
+            <div class="flex-grow font-mono text-xs sm:text-sm bg-white text-dsnavy-900 px-4 py-2 rounded-lg border border-dsslate-300 flex items-center justify-between">
+              <span>https://api.deepseeknexus.com/v3/pipeline/execute</span>
+              <span class="text-xs text-dsnavy-600 hidden sm:inline">Bearer ds_live_99182...</span>
+            </div>
+            <button onclick="executeApiCall()" id="btn-run-api" class="px-6 py-2 gradient-ds-bg text-white font-bold text-sm rounded-lg transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-play text-xs"></i>
+              <span>Send Request</span>
+            </button>
+          </div>
+
+          <!-- Payload & Output Grid -->
+          <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-dsslate-200">
+            <!-- Request JSON -->
+            <div class="p-5">
+              <div class="flex items-center justify-between mb-3 font-mono text-xs text-dsnavy-600">
+                <span class="font-bold">Request Payload</span>
+                <span class="text-dsblue-600">JSON</span>
+              </div>
+              <textarea id="api-request-body" rows="8" class="w-full bg-dsslate-50 text-dsnavy-900 font-mono text-xs p-4 rounded-xl border border-dsslate-300 focus:outline-none focus:border-dsblue-600 transition resize-none">{
+  "cluster": "us-east-aws",
+  "priority": "high",
+  "transaction": {
+    "account_id": "acc_deepseek_9912",
+    "amount": 125000,
+    "currency": "USD"
+  }
+}</textarea>
+            </div>
+
+            <!-- Dark Navy Terminal Output Window for Response -->
+            <div class="p-5 bg-dsnavy-950 text-slate-300 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3 font-mono text-xs">
+                  <span class="text-slate-400">Response Payload</span>
+                  <span id="api-status-badge" class="text-slate-400">Ready</span>
+                </div>
+                <pre id="api-response-output" class="bg-dsnavy-900 text-dscyan-300 font-mono text-xs p-4 rounded-xl border border-dsnavy-800 min-h-[160px] overflow-x-auto">// Click "Send Request" to test endpoint...</pre>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-dsnavy-800 flex items-center justify-between text-xs font-mono">
+                <span class="text-slate-400">Execution Latency: <strong id="api-latency" class="text-white">-- ms</strong></span>
+                <span class="text-slate-400">Region: <strong class="text-white">us-east-1</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PRICING MATRIX -->
+    <section id="pricing" class="py-20 bg-white border-b border-dsslate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="text-xs font-mono font-bold text-dsblue-600 uppercase tracking-widest bg-dsblue-50 px-3 py-1 rounded-full border border-dsblue-200">Transparent Billing</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-dsnavy-900 mt-3">
+            Predictable Platform Tiers
+          </h2>
+          <p class="mt-4 text-dsnavy-700 text-base">
+            Scale from startup MVP to multi-region enterprise without unexpected overage surprises.
+          </p>
+
+          <!-- Annual Switcher -->
+          <div class="mt-8 inline-flex items-center bg-dsslate-100 p-1.5 rounded-xl border border-dsslate-200">
+            <button onclick="toggleBilling('monthly')" id="bill-monthly" class="px-4 py-2 text-sm font-semibold rounded-lg text-dsnavy-600">Monthly Billing</button>
+            <button onclick="toggleBilling('annual')" id="bill-annual" class="px-4 py-2 text-sm font-semibold rounded-lg bg-white text-dsblue-600 shadow-sm border border-dsslate-200">
+              Annual Billing <span class="text-[10px] uppercase font-bold bg-dsblue-50 text-dsblue-700 px-1.5 py-0.5 rounded ml-1">Save 20%</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="grid md:grid-cols-3 gap-8 items-stretch">
+          
+          <!-- Starter -->
+          <div class="ds-light-card rounded-2xl p-8 flex flex-col justify-between">
+            <div>
+              <h3 class="text-xl font-bold font-heading text-dsnavy-900">Developer</h3>
+              <p class="text-xs text-dsnavy-600 mt-1">Free tier for MVP developers & side projects.</p>
+              
+              <div class="mt-6 mb-6">
+                <span class="text-4xl font-extrabold font-mono text-dsnavy-900">$0</span>
+                <span class="text-dsnavy-600 text-sm">/ month</span>
+              </div>
+
+              <ul class="space-y-3 text-sm text-dsnavy-800">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> 100,000 requests / mo</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> 3 Region Edge Replication</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> Community Slack Support</li>
+              </ul>
+            </div>
+
+            <button onclick="openModal('Developer Plan Sign Up')" class="mt-8 w-full py-3 bg-dsslate-100 hover:bg-dsslate-200 text-dsnavy-900 font-bold rounded-xl border border-dsslate-300 transition">
+              Get Started Free
+            </button>
+          </div>
+
+          <!-- Growth (Highlighted) -->
+          <div class="bg-white border-2 border-dsblue-600 rounded-2xl p-8 flex flex-col justify-between shadow-xl relative">
+            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-dsblue-600 text-white text-[11px] font-bold uppercase tracking-wider px-3 py-0.5 rounded-full shadow-sm">
+              Most Popular Startup Tier
+            </div>
+
+            <div>
+              <h3 class="text-xl font-bold font-heading text-dsnavy-900">Growth</h3>
+              <p class="text-xs text-dsnavy-600 mt-1">For scaling tech companies with heavy API volume.</p>
+              
+              <div class="mt-6 mb-6">
+                <span id="price-growth" class="text-4xl font-extrabold font-mono text-dsnavy-900">$239</span>
+                <span class="text-dsnavy-600 text-sm">/ month</span>
+              </div>
+
+              <ul class="space-y-3 text-sm text-dsnavy-800">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> 10,000,000 requests / mo</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> Global Anycast Routing</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> 99.99% SLA Uptime</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> Dedicated Solutions Channel</li>
+              </ul>
+            </div>
+
+            <button onclick="openModal('Growth Plan Trial')" class="mt-8 w-full py-3 gradient-ds-bg text-white font-bold rounded-xl transition shadow-md shadow-dsblue-600/20">
+              Start 14-Day Free Trial
+            </button>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="ds-light-card rounded-2xl p-8 flex flex-col justify-between">
+            <div>
+              <h3 class="text-xl font-bold font-heading text-dsnavy-900">Enterprise</h3>
+              <p class="text-xs text-dsnavy-600 mt-1">Private cloud VPC isolation & custom SLAs.</p>
+              
+              <div class="mt-6 mb-6">
+                <span class="text-4xl font-extrabold font-mono text-dsnavy-900">Custom</span>
+              </div>
+
+              <ul class="space-y-3 text-sm text-dsnavy-800">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> Unlimited Request Volume</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> Private Isolated VPC Cluster</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> 99.999% SLA Uptime</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-dsblue-600 text-xs"></i> Dedicated BAA & Security Audits</li>
+              </ul>
+            </div>
+
+            <button onclick="openModal('Enterprise Contact Sales')" class="mt-8 w-full py-3 bg-dsslate-100 hover:bg-dsslate-200 text-dsnavy-900 font-bold rounded-xl border border-dsslate-300 transition">
+              Talk to Solutions Architect
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ========================================================================================= -->
+  <!-- VIEW 2: STAR-M HIGH-INTENT CASE STUDY VIEW (LIGHT THEME) -->
+  <!-- ========================================================================================= -->
+  <main id="view-casestudy" class="flex-grow hidden">
+    
+    <!-- Case Study Header Banner -->
+    <section class="py-16 bg-gradient-to-b from-white to-dsslate-100 border-b border-dsslate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex items-center gap-2 text-xs font-mono text-dsblue-600 uppercase tracking-wider mb-4">
+          <a href="#" onclick="switchView('home')" class="hover:underline">Home</a> &rarr; Case Study: FinTech Infrastructure Migration
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-8">
+            <span class="inline-block px-3 py-1 rounded-md bg-dsblue-50 text-dsblue-700 border border-dsblue-200 text-xs font-mono font-bold mb-4">
+              FINTECH & HIGH-FREQUENCY PAYMENTS
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold font-heading text-dsnavy-900 leading-tight">
+              How PayFlow Cut Transaction Latency by 74% and Saved $340,000/yr
+            </h1>
+            <p class="mt-4 text-lg text-dsnavy-700">
+              A STAR-M structured case study examining PayFlow's 11-day migration from legacy monolith queues to DeepSeek's managed consensus engine.
+            </p>
+          </div>
+
+          <!-- Sidebar At-a-Glance Box -->
+          <div class="lg:col-span-4 ds-light-card rounded-2xl p-6">
+            <h3 class="text-xs font-mono uppercase tracking-wider text-dsnavy-600 font-bold mb-4 border-b border-dsslate-200 pb-2">
+              Implementation Metrics
+            </h3>
+            <div class="space-y-3 text-xs font-mono">
+              <div class="flex justify-between">
+                <span class="text-dsnavy-600">Company:</span>
+                <span class="text-dsnavy-900 font-bold">PayFlow Global</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dsnavy-600">Engineering Size:</span>
+                <span class="text-dsnavy-900 font-bold">140+ Engineers</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dsnavy-600">Migration Time:</span>
+                <span class="text-dsblue-600 font-bold">11 Business Days</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dsnavy-600">Downtime Impact:</span>
+                <span class="text-emerald-600 font-bold">0 Seconds</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- METRIC BANNER CARDS -->
+    <section class="py-12 bg-white border-b border-dsslate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid sm:grid-cols-3 gap-6">
+          <div class="p-6 bg-dsslate-50 rounded-2xl border border-dsslate-200 text-center">
+            <span class="text-4xl font-extrabold text-dsblue-600 font-mono">-74%</span>
+            <p class="text-xs font-semibold text-dsnavy-700 mt-2">Latency Reduction (48ms &rarr; 11ms)</p>
+          </div>
+          <div class="p-6 bg-dsslate-50 rounded-2xl border border-dsslate-200 text-center">
+            <span class="text-4xl font-extrabold text-dsblue-600 font-mono">$340,000</span>
+            <p class="text-xs font-semibold text-dsnavy-700 mt-2">Annual Cloud Cost Savings</p>
+          </div>
+          <div class="p-6 bg-dsslate-50 rounded-2xl border border-dsslate-200 text-center">
+            <span class="text-4xl font-extrabold text-emerald-600 font-mono">99.999%</span>
+            <p class="text-xs font-semibold text-dsnavy-700 mt-2">Zero-Downtime Migration SLA</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAR-M ARTICLE BODY -->
+    <section class="py-16 bg-dsslate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-12 gap-12">
+          
+          <div class="lg:col-span-8 space-y-12">
+            
+            <!-- SITUATION -->
+            <div class="bg-white p-8 rounded-2xl border border-dsslate-200 shadow-sm">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="w-8 h-8 rounded-lg bg-dsblue-50 text-dsblue-600 font-mono font-bold flex items-center justify-center text-sm border border-dsblue-200">1</span>
+                <h2 class="text-2xl font-bold font-heading text-dsnavy-900">The Situation</h2>
+              </div>
+              <p class="text-dsnavy-700 leading-relaxed">
+                PayFlow processes over $2.4 Billion in cross-border settlements annually. Rapid growth resulted in database lock contention and race conditions on their primary Postgres clusters during regional market opens.
+              </p>
+              <div class="mt-6 p-4 bg-dsblue-50 border-l-4 border-dsblue-600 rounded-r-xl text-dsnavy-800 text-sm italic">
+                "Our senior engineering team was spending nearly half their sprint bandwidth dealing with database lock contention and sync failures during market opens."
+                <div class="mt-2 font-mono text-xs text-dsnavy-600 font-semibold not-italic">— Marcus Vance, VP of Infrastructure at PayFlow</div>
+              </div>
+            </div>
+
+            <!-- TASK -->
+            <div class="bg-white p-8 rounded-2xl border border-dsslate-200 shadow-sm">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="w-8 h-8 rounded-lg bg-dsblue-50 text-dsblue-600 font-mono font-bold flex items-center justify-center text-sm border border-dsblue-200">2</span>
+                <h2 class="text-2xl font-bold font-heading text-dsnavy-900">The Task & Technical Criteria</h2>
+              </div>
+              <p class="text-dsnavy-700 leading-relaxed mb-4">
+                PayFlow needed an enterprise-ready distributed state layer that satisfied four strict engineering criteria:
+              </p>
+              <ul class="grid sm:grid-cols-2 gap-3 text-sm">
+                <li class="bg-dsslate-50 p-3 rounded-lg border border-dsslate-200 text-dsnavy-800 flex items-center gap-2">
+                  <i class="fa-solid fa-circle-check text-dsblue-600"></i> Sub-12ms global P99 latency
+                </li>
+                <li class="bg-dsslate-50 p-3 rounded-lg border border-dsslate-200 text-dsnavy-800 flex items-center gap-2">
+                  <i class="fa-solid fa-circle-check text-dsblue-600"></i> SOC2 Type II compliance
+                </li>
+                <li class="bg-dsslate-50 p-3 rounded-lg border border-dsslate-200 text-dsnavy-800 flex items-center gap-2">
+                  <i class="fa-solid fa-circle-check text-dsblue-600"></i> Zero data loss (RPO = 0)
+                </li>
+                <li class="bg-dsslate-50 p-3 rounded-lg border border-dsslate-200 text-dsnavy-800 flex items-center gap-2">
+                  <i class="fa-solid fa-circle-check text-dsblue-600"></i> Phased shadow traffic deployment
+                </li>
+              </ul>
+            </div>
+
+            <!-- ACTION -->
+            <div class="bg-white p-8 rounded-2xl border border-dsslate-200 shadow-sm">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="w-8 h-8 rounded-lg bg-dsblue-50 text-dsblue-600 font-mono font-bold flex items-center justify-center text-sm border border-dsblue-200">3</span>
+                <h2 class="text-2xl font-bold font-heading text-dsnavy-900">Action & Phased Migration</h2>
+              </div>
+              <p class="text-dsnavy-700 leading-relaxed mb-6">
+                Using DeepSeek Nexus TypeScript SDK, PayFlow executed a 3-stage migration plan over 11 business days.
+              </p>
+
+              <div class="space-y-3 font-mono text-xs">
+                <div class="p-3 bg-dsslate-50 rounded-xl border border-dsslate-200 flex items-center justify-between">
+                  <span class="font-bold text-dsblue-600">Days 1-3:</span>
+                  <span class="text-dsnavy-800">VPC Peering setup and SDK integration in sandbox environment.</span>
+                </div>
+                <div class="p-3 bg-dsslate-50 rounded-xl border border-dsslate-200 flex items-center justify-between">
+                  <span class="font-bold text-dsblue-600">Days 4-7:</span>
+                  <span class="text-dsnavy-800">Shadow traffic replication at 60,000 req/sec to verify state.</span>
+                </div>
+                <div class="p-3 bg-dsblue-50 rounded-xl border border-dsblue-200 flex items-center justify-between">
+                  <span class="font-bold text-dsblue-700">Days 8-11:</span>
+                  <span class="text-dsnavy-900 font-semibold">Live DNS cutover with zero downtime.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- RESULTS -->
+            <div class="bg-white p-8 rounded-2xl border border-dsslate-200 shadow-sm">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="w-8 h-8 rounded-lg bg-dsblue-50 text-dsblue-600 font-mono font-bold flex items-center justify-center text-sm border border-dsblue-200">4</span>
+                <h2 class="text-2xl font-bold font-heading text-dsnavy-900">Results & Long-Term Metrics</h2>
+              </div>
+              <p class="text-dsnavy-700 leading-relaxed">
+                By replacing legacy queuing infrastructure with DeepSeek, PayFlow reduced overall compute expenses by $340,000 annually while scaling transaction throughput 4x.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Sidebar Actions -->
+          <div class="lg:col-span-4 space-y-6">
+            <div class="bg-dsnavy-900 text-white rounded-2xl p-6 shadow-xl">
+              <h3 class="text-lg font-bold font-heading mb-2">Build Your Solution</h3>
+              <p class="text-xs text-slate-300 mb-6 leading-relaxed">
+                Schedule a custom architectural review with DeepSeek's technical team to model your infrastructure requirements.
+              </p>
+              <button onclick="openModal('Book Architecture Call')" class="w-full py-3 gradient-ds-bg text-white font-bold text-sm rounded-xl transition shadow-md mb-3">
+                Book Architecture Call
+              </button>
+              <button onclick="openModal('Download Technical PDF Case Study')" class="w-full py-3 bg-dsnavy-800 hover:bg-dsnavy-700 text-slate-200 font-semibold text-sm rounded-xl border border-slate-700 transition">
+                Download PDF Report
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- GLOBAL FOOTER -->
+  <footer class="bg-white border-t border-dsslate-200 py-12 text-dsnavy-600 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+      <div class="col-span-2">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-6 h-6 rounded-lg gradient-ds-bg flex items-center justify-center text-white text-xs font-bold">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <span class="font-heading font-extrabold text-dsnavy-900 text-base">DeepSeek Nexus</span>
+        </div>
+        <p class="text-dsnavy-600 leading-relaxed max-w-sm mb-4">
+          High-performance developer platform for real-time applications and AI agent orchestration.
+        </p>
+        <p class="text-dsnavy-600 font-mono">© 2026 DeepSeek Nexus Inc. All rights reserved.</p>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-dsnavy-900 mb-3">Platform</h4>
+        <ul class="space-y-2">
+          <li><a href="#playground" onclick="switchView('home')" class="hover:text-dsblue-600">Global Edge Network</a></li>
+          <li><a href="#playground" onclick="switchView('home')" class="hover:text-dsblue-600">Consensus Engine</a></li>
+          <li><a href="#pricing" onclick="switchView('home')" class="hover:text-dsblue-600">Pricing Matrix</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-dsnavy-900 mb-3">Resources</h4>
+        <ul class="space-y-2">
+          <li><a href="#" onclick="switchView('casestudy')" class="hover:text-dsblue-600">FinTech Case Study</a></li>
+          <li><a href="#playground" onclick="switchView('home')" class="hover:text-dsblue-600">API Sandbox</a></li>
+          <li><a href="#" onclick="openModal('Docs Access')" class="hover:text-dsblue-600">Documentation</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-dsnavy-900 mb-3">Compliance</h4>
+        <ul class="space-y-2">
+          <li><span class="text-dsnavy-600">SOC2 Type II</span></li>
+          <li><span class="text-dsnavy-600">ISO 27001</span></li>
+          <li><span class="text-dsnavy-600">HIPAA Ready</span></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL -->
+  <div id="modal-backdrop" class="fixed inset-0 bg-dsnavy-950/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+    <div class="bg-white border border-dsslate-200 rounded-2xl max-w-md w-full p-6 m-4 shadow-2xl relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-dsnavy-600 hover:text-dsnavy-900">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <h3 id="modal-title" class="text-xl font-bold font-heading text-dsnavy-900 mb-2">Request Technical Access</h3>
+      <p class="text-xs text-dsnavy-600 mb-6">Connect directly with a DeepSeek solution architect.</p>
+
+      <form onsubmit="handleModalSubmit(event)" class="space-y-4 font-mono text-xs">
+        <div>
+          <label class="block text-dsnavy-800 mb-1">Work Email</label>
+          <input type="email" required placeholder="cto@company.com" class="w-full bg-dsslate-50 text-dsnavy-900 p-3 rounded-lg border border-dsslate-300 focus:outline-none focus:border-dsblue-600">
+        </div>
+        <div>
+          <label class="block text-dsnavy-800 mb-1">Monthly API Volume</label>
+          <select class="w-full bg-dsslate-50 text-dsnavy-900 p-3 rounded-lg border border-dsslate-300 focus:outline-none focus:border-dsblue-600">
+            <option>&lt; 1,000,000 reqs</option>
+            <option>1M - 10M reqs</option>
+            <option>10M - 100M reqs</option>
+            <option>100M+ reqs (Dedicated VPC)</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full py-3.5 gradient-ds-bg text-white font-bold rounded-lg font-sans transition shadow-md">
+          Submit Request
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT CONTROLLERS -->
+  <script>
+    // View Switcher
+    function switchView(viewName) {
+      const homeView = document.getElementById('view-home');
+      const caseView = document.getElementById('view-casestudy');
+      const navHome = document.getElementById('nav-home');
+      const navCase = document.getElementById('nav-casestudy');
+
+      if (viewName === 'home') {
+        homeView.classList.remove('hidden');
+        caseView.classList.add('hidden');
+        navHome.className = "px-4 py-1.5 rounded-lg transition-all bg-white text-dsblue-600 shadow-sm border border-dsslate-200 font-semibold";
+        navCase.className = "px-4 py-1.5 text-dsnavy-700 hover:text-dsblue-600 rounded-lg transition-all hover:bg-white/60";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (viewName === 'casestudy') {
+        homeView.classList.add('hidden');
+        caseView.classList.remove('hidden');
+        navCase.className = "px-4 py-1.5 rounded-lg transition-all bg-white text-dsblue-600 shadow-sm border border-dsslate-200 font-semibold";
+        navHome.className = "px-4 py-1.5 text-dsnavy-700 hover:text-dsblue-600 rounded-lg transition-all hover:bg-white/60";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Code Snippets for Hero Terminal
+    const codeSnippets = {
+      ts: `// DeepSeek Nexus SDK Integration
+import { DeepSeekNexus } from '@deepseek/nexus-core';
+
+const dsClient = new DeepSeekNexus({
+  apiKey: process.env.DEEPSEEK_SECRET_KEY,
+  region: 'us-east-cluster',
+  mode: 'high-throughput-v3'
+});
+
+// Trigger real-time distributed state execution
+const response = await dsClient.pipeline.execute({
+  streamId: 'str_prod_sync_8890',
+  payload: { entityId: 'usr_00921', transactionVal: 85000 },
+  consensus: 'ultra-fast'
+});
+
+console.log(\`Executed with latency: \${response.latencyMs}ms\`);`,
+
+      py: `# DeepSeek Python SDK
+from deepseek_nexus import DeepSeekNexus
+import os
+
+ds_client = DeepSeekNexus(
+    api_key=os.getenv("DEEPSEEK_SECRET_KEY"),
+    region="us-east-cluster"
+)
+
+# Execute sub-10ms consensus
+response = ds_client.pipeline.execute(
+    stream_id="str_prod_sync_8890",
+    payload={"entityId": "usr_00921", "transactionVal": 85000},
+    consensus="ultra-fast"
+)
+
+print(f"Latency: {response.latency_ms}ms")`,
+
+      go: `// DeepSeek Go SDK
+package main
+
+import (
+  "fmt"
+  "github.com/deepseek/nexus-go"
+)
+
+func main() {
+  client := nexus.NewClient("ds_sec_key_99182")
+  
+  res, _ := client.ExecutePipeline(&nexus.Opts{
+    StreamID: "str_prod_sync_8890",
+    Consensus: "ultra-fast",
+  })
+  
+  fmt.Printf("Executed in %dms\\n", res.LatencyMS)
+}`,
+
+      curl: `# Query DeepSeek Nexus API directly
+curl -X POST https://api.deepseeknexus.com/v3/pipeline/execute \\
+  -H "Authorization: Bearer ds_sec_99182" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "streamId": "str_prod_sync_8890",
+    "consensus": "ultra-fast"
+  }'`
+    };
+
+    function setHeroCode(lang) {
+      document.getElementById('hero-code-block').textContent = codeSnippets[lang];
+      ['ts', 'py', 'go', 'curl'].forEach(l => {
+        const btn = document.getElementById(`lang-${l}`);
+        if (l === lang) {
+          btn.className = "px-2.5 py-1 rounded bg-dsblue-600 text-white font-medium";
+        } else {
+          btn.className = "px-2.5 py-1 rounded text-slate-400 hover:text-slate-200";
+        }
+      });
+    }
+
+    function copyHeroCode() {
+      const text = document.getElementById('hero-code-block').textContent;
+      document.execCommand('copy');
+      alert('Code snippet copied to clipboard!');
+    }
+
+    // TCO Calculator logic
+    function updateCalculator() {
+      const engineers = parseInt(document.getElementById('input-engineers').value);
+      const hourlyRate = parseInt(document.getElementById('input-salary').value);
+      const months = parseInt(document.getElementById('input-months').value);
+
+      document.getElementById('val-engineers').textContent = `${engineers} ${engineers === 1 ? 'Engineer' : 'Engineers'}`;
+      document.getElementById('val-salary').textContent = `$${hourlyRate} / hr`;
+      document.getElementById('val-months').textContent = `${months} Months`;
+
+      const hoursPerMonth = 160;
+      const initialBuildCost = engineers * hourlyRate * hoursPerMonth * months;
+      const nexusTotalCost = 1200 * 12; // $14,400 annual platform tier
+
+      const netSavings = initialBuildCost - nexusTotalCost;
+      const timeSavedMonths = Math.max(1, months - 0.5);
+
+      document.getElementById('cost-in-house').textContent = `$${Math.round(initialBuildCost).toLocaleString()}`;
+      document.getElementById('cost-nexus').textContent = `$${Math.round(nexusTotalCost).toLocaleString()}`;
+      document.getElementById('net-savings').textContent = `$${Math.round(netSavings).toLocaleString()}`;
+      document.getElementById('time-saved').textContent = `${timeSavedMonths} months`;
+
+      const total = initialBuildCost + nexusTotalCost;
+      const inHousePct = Math.round((initialBuildCost / total) * 100);
+      const dsPct = 100 - inHousePct;
+      document.getElementById('bar-inhouse').style.width = `${inHousePct}%`;
+      document.getElementById('bar-deepseek').style.width = `${dsPct}%`;
+    }
+
+    // Node Inspector details
+    const nodeDetails = {
+      sdk: {
+        title: "SDK & Client Application Layer",
+        desc: "Lightweight client SDK wrappers available for Python, TypeScript, Go, and Rust. Features local state caching and automated retry mechanics.",
+        spec1: "< 0.4ms Local Wrapper",
+        spec2: "gRPC / HTTP3 Streaming",
+        spec3: "Automatic Offline Queue"
+      },
+      core: {
+        title: "DeepSeek Orchestration Core",
+        desc: "Distributed consensus engine operating over high-performance Raft cluster nodes with active sub-8ms P99 queues.",
+        spec1: "P99 < 8.5ms Latency",
+        spec2: "Raft Consensus Protocol",
+        spec3: "Zero Data Loss (RPO=0)"
+      },
+      security: {
+        title: "Enterprise Security & Isolation",
+        desc: "Dedicated tenant isolation with automatic mTLS encryption in transit and SOC2 Type II audit logging.",
+        spec1: "mTLS + AES-256 Encryption",
+        spec2: "Private AWS/GCP VPC Peering",
+        spec3: "SOC2 Type II Certified"
+      },
+      sink: {
+        title: "Enterprise Data Sink",
+        desc: "Automated real-time replication adapters for PostgreSQL, Redis, Snowflake, and vector databases.",
+        spec1: "15,000+ Concurrent Pools",
+        spec2: "Sub-second CDC replication",
+        spec3: "Automatic PII Sanitization"
+      }
+    };
+
+    function selectArchNode(nodeKey) {
+      const data = nodeDetails[nodeKey];
+      document.getElementById('arch-title').textContent = data.title;
+      document.getElementById('arch-desc').textContent = data.desc;
+      document.getElementById('arch-spec-1').textContent = data.spec1;
+      document.getElementById('arch-spec-2').textContent = data.spec2;
+      document.getElementById('arch-spec-3').textContent = data.spec3;
+
+      ['sdk', 'core', 'security', 'sink'].forEach(key => {
+        const el = document.getElementById(`node-${key}`);
+        if (key === nodeKey) {
+          el.className = "cursor-pointer p-5 rounded-xl bg-white border-2 border-dsblue-600 shadow-md flex items-center justify-between group transition-all";
+        } else {
+          el.className = "cursor-pointer p-5 rounded-xl bg-white border border-dsslate-200 hover:border-dsblue-300 flex items-center justify-between group transition-all";
+        }
+      });
+    }
+
+    // API Sandbox Execution
+    function executeApiCall() {
+      const btn = document.getElementById('btn-run-api');
+      const output = document.getElementById('api-response-output');
+      const badge = document.getElementById('api-status-badge');
+      const latency = document.getElementById('api-latency');
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> Running...`;
+      badge.textContent = "Processing...";
+      badge.className = "text-yellow-400 font-mono";
+
+      setTimeout(() => {
+        const simLatency = Math.floor(Math.random() * 5) + 7; // 7-11ms
+        output.textContent = JSON.stringify({
+          status: "SUCCESS",
+          execution_id: "ds_exec_9921_prod",
+          consensus_status: "ACHIEVED",
+          nodes_acknowledged: 7,
+          timestamp: new Date().toISOString(),
+          metrics: {
+            p99_latency_ms: simLatency,
+            security_check: "PASSED_SOC2"
+          }
+        }, null, 2);
+
+        badge.textContent = "200 OK";
+        badge.className = "text-dscyan-400 font-bold font-mono";
+        latency.textContent = `${simLatency} ms`;
+
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-play text-xs"></i> Send Request`;
+      }, 500);
+    }
+
+    // Billing Switcher
+    function toggleBilling(type) {
+      const btnMonthly = document.getElementById('bill-monthly');
+      const btnAnnual = document.getElementById('bill-annual');
+      const growthPrice = document.getElementById('price-growth');
+
+      if (type === 'annual') {
+        btnAnnual.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-white text-dsblue-600 shadow-sm border border-dsslate-200";
+        btnMonthly.className = "px-4 py-2 text-sm font-semibold rounded-lg text-dsnavy-600";
+        growthPrice.textContent = "$239";
+      } else {
+        btnMonthly.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-white text-dsblue-600 shadow-sm border border-dsslate-200";
+        btnAnnual.className = "px-4 py-2 text-sm font-semibold rounded-lg text-dsnavy-600";
+        growthPrice.textContent = "$299";
+      }
+    }
+
+    // Modal
+    function openModal(title) {
+      const modal = document.getElementById('modal-backdrop');
+      document.getElementById('modal-title').textContent = title;
+      modal.classList.remove('hidden');
+      setTimeout(() => modal.classList.remove('opacity-0'), 10);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal-backdrop');
+      modal.classList.add('opacity-0');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    function handleModalSubmit(e) {
+      e.preventDefault();
+      alert('Thank you! Your request has been received by DeepSeek solution architects.');
+      closeModal();
+    }
+  </script>
+</body>
+</html>
