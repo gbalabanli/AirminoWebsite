@@ -10,7 +10,7 @@ import BeforeAfterTable from './BeforeAfterTable.astro';
 
 <div class="wrap calc-grid">
   <div class="panel">
-    <h3>Your current operation</h3>
+    <h2>Your current operation</h2>
     <p class="sub">// drag or type to adjust</p>
 
     <div class="field">
@@ -80,7 +80,7 @@ import BeforeAfterTable from './BeforeAfterTable.astro';
     </div>
 
     <div class="panel">
-      <h3>Cost comparison</h3>
+      <h2>Cost comparison</h2>
       <p class="sub">// monthly, all-in</p>
 
       <div class="bars">
@@ -220,7 +220,7 @@ calc();
     border-radius: var(--radius);
     padding: 28px;
   }
-  .panel h3 {
+  .panel h2 {
     font-size: 16px;
     margin-bottom: 6px;
     line-height: 1.15;
@@ -331,7 +331,7 @@ calc();
     color: var(--accent);
   }
   .result.hero-res .rv {
-    color: var(--mint);
+    color: var(--mint-ink);
     font-size: 52px;
   }
   .result .rs {
@@ -383,10 +383,10 @@ calc();
     background: linear-gradient(90deg, #00e0a8, #00c896);
   }
   .bar-row .bv.old {
-    color: var(--warn);
+    color: var(--warn-ink);
   }
   .bar-row .bv.new {
-    color: var(--mint);
+    color: var(--mint-ink);
   }
   .calc-note {
     background: var(--mint-soft);

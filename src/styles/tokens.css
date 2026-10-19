@@ -10,12 +10,14 @@
   --line: #e4e8f2;
   --line-dark: #242e48;
   --muted: #5b6478;
-  --muted-2: #8a93a8;
+  --muted-2: #667085;
   --accent: #3b5bff;
   --accent-soft: #eef1ff;
   --mint: #00c896;
+  --mint-ink: #027a5a;
   --mint-soft: #e6faf4;
   --warn: #ff6b4a;
+  --warn-ink: #c23a0c;
   --warn-soft: #fff0ec;
   --radius: 14px;
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;

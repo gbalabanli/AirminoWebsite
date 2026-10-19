@@ -3,7 +3,7 @@
 ## Planning Metadata
 - Last Updated: 2026-10-16
 - Planning Horizon: GitHub repo → Astro static launch on custom domain → usage-story + pricing expansion
-- Overall Status: Live — https://airmino.com (HTTPS). Phases 05–07 implemented locally + browser-verified, pending push/deploy. Lighthouse measurement outstanding.
+- Overall Status: Live — https://airmino.com (HTTPS). Gate C Lighthouse measured 2026-10-19: all 4 routes 100/100/100/100 (desktop).
 
 ## Project Goal
 Ship Airmino's public website as a fast Astro static site, deployed from GitHub to a custom domain, positioning Airmino as Decision Infrastructure for automated business decisions (Jev-like). The site must enable self-serve evaluation: proof-first hero, 3-depth landing, objection handling, case-study proof, and ROI calculator — forming the Intent Activation Loop (brand → self-serve → proof → intent signal). Extension (Phases 05–07): Laya-style Usage Stories page (4 workflows, fraud first, no playground), static per-story API request/response examples, and a home pricing matrix.
@@ -132,3 +132,4 @@ Split into 7 forward-only phases: Foundation (repo + scaffold + deploy skeleton)
 - 2026-10-16: Trial signup modal (`TrialModal.astro`, global in `Base.astro`) — all 7 trial CTAs open a popup form (name/email/company/volume/interest/message) submitted via FormSubmit to the trial inbox; sales variant preselects enterprise. GDPR subprocessors + analytics/docs ledger updated.
 - 2026-10-16: Deployed `27559e9` — Actions run `38929880458` green (build + deploy). Live verified: `/` `/usage/` `/gdpr/` `/roi-calculator/` all 200 with new content; old `/case-studies/ledgerline/` 404s as intended. Outstanding: FormSubmit inbox activation, real story/pricing/GDPR-contact data, Lighthouse measurement.
 - 2026-10-16: Old case-study URL restored as instant redirect (`public/case-studies/ledgerline/index.html` → `/usage/#fraud-detection`, canonical + noindex, sitemap untouched) so external links keep working.
+- 2026-10-19: Gate C closed — Lighthouse 13 desktop measured on production, all four routes 100/100/100/100 (perf/a11y/bp/SEO). Fixes that earned it: WCAG contrast pass (light tokens remapped to accessible inks #667085/#027a5a/#c23a0c via new `--mint-ink`/`--warn-ink`), logo given explicit width/height, terminal/API small labels lightened (#8a95b3), all h4 items promoted to h3 for valid heading order (Speeds/Acts/CaseTeasers/Faq), calculator panels h3→h2. Remaining diagnostics are GitHub Pages cache TTL (10-min) and the PNG logo format — notionally cosmetic, perf score unaffected.

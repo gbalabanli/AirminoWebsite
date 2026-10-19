@@ -10,23 +10,23 @@
     </div>
     <div class="faq">
       <div class="q">
-        <h4>How is this different from a classifier?</h4>
+        <h3>How is this different from a classifier?</h3>
         <p>A classifier is trained on a fixed label set. Airmino takes <code>options[]</code> as a request parameter, so the same model handles "approve/hold/decline" at 9am and "tier_1/tier_2/tier_3" at 9:05. No retraining, no redeploy.</p>
       </div>
       <div class="q">
-        <h4>What's the accuracy versus an LLM?</h4>
+        <h3>What's the accuracy versus an LLM?</h3>
         <p>On structured decision tasks we match or exceed prompted GPT-class models on top-1 accuracy, with calibration error under 2%. Full confidence intervals and per-domain breakdowns are in the benchmark appendix.</p>
       </div>
       <div class="q">
-        <h4>Can it run inside our infrastructure?</h4>
+        <h3>Can it run inside our infrastructure?</h3>
         <p>Yes. Deploy in your VPC or fully self-hosted. The model is a single container with no external calls — no data leaves your network, no egress costs, no third-party subprocessor.</p>
       </div>
       <div class="q">
-        <h4>What's the failure mode?</h4>
+        <h3>What's the failure mode?</h3>
         <p>Airmino can only return one of the options you supplied, in a fixed schema. It cannot invent a category or emit free text. When confidence falls below your threshold, it returns <code>escalate: true</code> instead of guessing.</p>
       </div>
       <div class="q">
-        <h4>Which workflows does this fit?</h4>
+        <h3>Which workflows does this fit?</h3>
         <p>Anywhere a system must pick one option from a set you define: fraud triage, support ticket routing, loan pre-qualification, offer selection, content-moderation appeal. If the decision fits in a request payload and the answer fits a schema, it fits Airmino.</p>
       </div>
     </div>
@@ -45,7 +45,7 @@
     border-radius: var(--radius);
     padding: 24px;
   }
-  .q h4 {
+  .q h3 {
     font-size: 15px;
     margin-bottom: 9px;
     display: flex;
@@ -55,7 +55,7 @@
     letter-spacing: -0.02em;
     font-weight: 680;
   }
-  .q h4::before {
+  .q h3::before {
     content: "?";
     font-family: var(--mono);
     color: var(--accent);
