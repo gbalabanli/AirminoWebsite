@@ -58,3 +58,10 @@
   - `git diff --check` ✅
 - **Playwright:** Preview E2E verified default English, all three language switches, localized headings/canonicals, hash preservation, mobile layout, trial modal, and zero console errors.
 - **Note:** No lint script is currently defined in `package.json`; the available static/type checks pass.
+
+## Production deployment
+
+- **Status:** PASS
+- **Commit:** `b0deb64`
+- **Actions run:** `42003329456` — Build ✓, Deploy ✓
+- **Live checks on https://airmino.com:** English + TR/ES/DE routes return 200; sitemap contains 16 URLs with reciprocal `hreflang`; 404 and legacy redirect excluded; language selector visible and functional with hash preservation; zero console errors.

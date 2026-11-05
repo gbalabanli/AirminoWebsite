@@ -20,4 +20,4 @@ Status legend: `[ ]` pending · `[x]` complete
 - Lint/type checks: `npx tsc --noEmit` ✅; no lint script is defined in `package.json`; `git diff --check` ✅
 - Playwright: Preview E2E ✅ — selector labels/default, locale switching, hash preservation, localized headings, mobile visibility/no overflow, trial modal, zero console errors
 - Sitemap/SEO: `npm run verify:sitemap` ✅; four localized route groups with reciprocal alternates; canonical/lang/hreflang checks ✅
-- Production deployment: Not performed; changes are ready for the normal commit/Pages deployment workflow.
+- Production deployment: Deployed in `b0deb64` — Actions run `42003329456` green (Build + Deploy). Live verified: all 16 routes return 200; sitemap has 16 URLs with `tr`/`de` hreflang (404 and legacy redirect excluded); homepage selector defaults to English and switches to localized routes preserving paths/hashes; 0 console errors.
