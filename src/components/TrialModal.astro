@@ -4,46 +4,68 @@
    enterprise option. Submissions POST to FormSubmit (form-to-email service)
    which forwards to the trial inbox — the static site has no backend.
    No-JS fallback: trigger buttons keep their original hrefs (#start). */
+import { getLocaleFromPath, getTranslations, localizePath, normalizeLocale, type LocaleInput } from '../lib/i18n';
+import { u } from '../lib/site';
+
+interface Props {
+  /** Locale supplied by the shared layout; omitted means infer from the URL. */
+  locale?: LocaleInput;
+}
+
 const endpoint = 'https://formsubmit.co/ajax/dashzeofficial@gmail.com';
+const { locale: requestedLocale } = Astro.props;
+const locale = normalizeLocale(requestedLocale ?? getLocaleFromPath(Astro.url.pathname));
+const translations = getTranslations(locale);
+const localizedPath = (path: string) => u(localizePath(path, locale));
 ---
 
 <div class="trial-overlay" id="trial-overlay" hidden>
   <div class="trial-dialog" role="dialog" aria-modal="true" aria-labelledby="trial-title">
-    <button type="button" class="trial-close" id="trial-close" aria-label="Close signup form">✕</button>
+    <button type="button" class="trial-close" id="trial-close" aria-label={translations.modal.closeSignupForm}>✕</button>
     <div id="trial-body">
-      <h2 id="trial-title">Start your 10,000-decision trial.</h2>
-      <p class="trial-sub">Tell us where to send your API key. We reply within one business day.</p>
+      <h2 id="trial-title">{translations.modal.title}</h2>
+      <p class="trial-sub">{translations.modal.subtitle}</p>
       <form id="trial-form" novalidate>
         <div class="trial-field">
-          <label for="trial-name">Name</label>
+          <label for="trial-name">{translations.modal.name}</label>
           <input id="trial-name" name="name" type="text" autocomplete="name" required maxlength="120" />
         </div>
         <div class="trial-field">
-          <label for="trial-email">Work email</label>
+          <label for="trial-email">{translations.modal.workEmail}</label>
           <input id="trial-email" name="email" type="email" autocomplete="email" required maxlength="160" />
         </div>
         <div class="trial-field">
-          <label for="trial-message">What will you decide? <span class="opt">(optional)</span></label>
-          <textarea id="trial-message" name="message" rows="3" maxlength="1000" placeholder="e.g. fraud review for card payments"></textarea>
+          <label for="trial-message">{translations.modal.decision} <span class="opt">({translations.modal.optional})</span></label>
+          <textarea id="trial-message" name="message" rows="3" maxlength="1000" placeholder={translations.modal.decisionPlaceholder}></textarea>
         </div>
         <input type="hidden" name="interest" id="trial-interest" value="trial" />
         <input type="text" name="_honey" class="trial-honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <p class="trial-error" id="trial-error" role="alert" hidden></p>
         <button type="submit" class="btn btn-primary btn-lg trial-submit" id="trial-submit" data-event="trial-form-submit">
-          Request API key
+          {translations.modal.requestApiKey}
         </button>
-        <p class="trial-fine">Submitted via our form processor — see <a href="/gdpr/">GDPR &amp; data processing</a>.</p>
+        <p class="trial-fine">{translations.modal.finePrint} <a href={localizedPath('/gdpr/')}>{translations.nav.gdpr}</a>.</p>
       </form>
     </div>
     <div id="trial-success" hidden>
-      <h2>Request received.</h2>
-      <p class="trial-sub">Thanks — your API key is on its way. Check your inbox within one business day.</p>
-      <button type="button" class="btn btn-ghost" id="trial-done">Back to site</button>
+      <h2>{translations.modal.successTitle}</h2>
+      <p class="trial-sub">{translations.modal.successMessage}</p>
+      <button type="button" class="btn btn-ghost" id="trial-done">{translations.modal.backToSite}</button>
     </div>
   </div>
 </div>
 
-<script is:inline define:vars={{ endpoint }}>
+<script
+  is:inline
+  define:vars={{
+    endpoint,
+    validationName: translations.modal.validationName,
+    validationEmail: translations.modal.validationEmail,
+    sending: translations.modal.sending,
+    requestApiKey: translations.modal.requestApiKey,
+    sendError: translations.modal.sendError,
+  }}
+>
   (function () {
     var overlay = document.getElementById('trial-overlay');
     var form = document.getElementById('trial-form');
@@ -95,10 +117,10 @@ const endpoint = 'https://formsubmit.co/ajax/dashzeofficial@gmail.com';
       error.hidden = true;
       var name = document.getElementById('trial-name').value.trim();
       var email = document.getElementById('trial-email').value.trim();
-      if (!name) { showError('Please enter your name.'); return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Please enter a valid work email.'); return; }
+      if (!name) { showError(validationName); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError(validationEmail); return; }
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending…';
+      submitBtn.textContent = sending;
       var honey = form.querySelector('[name="_honey"]');
       var data = {
         name: name,
@@ -123,9 +145,9 @@ const endpoint = 'https://formsubmit.co/ajax/dashzeofficial@gmail.com';
         if (window.plausible) window.plausible('trial-form-success');
         if (document.dispatchEvent) document.dispatchEvent(new CustomEvent('airmino:intent', { detail: { event: 'trial-form-success' } }));
       }).catch(function () {
-        showError('Could not send — check your connection and try again.');
+        showError(sendError);
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Request API key';
+        submitBtn.textContent = requestApiKey;
       });
     });
   })();

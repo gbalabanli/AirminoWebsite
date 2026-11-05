@@ -2,27 +2,39 @@
 import Base from '../layouts/Base.astro';
 import CalculatorIsland from '../components/CalculatorIsland.astro';
 import { u } from '../lib/site';
+import { getRoiCopy } from '../lib/i18n/secondary/roi';
+import { getLocaleFromPath, localizePath, normalizeLocale, type LocaleInput } from '../lib/i18n';
+
+interface Props {
+  /** Locale supplied by a localized route wrapper; omitted means English. */
+  locale?: LocaleInput;
+}
+
+const { locale: requestedLocale } = Astro.props;
+const locale = normalizeLocale(requestedLocale ?? getLocaleFromPath(Astro.url.pathname));
+const copy = getRoiCopy(locale);
+const localizedPath = (path: string) => u(localizePath(path, locale));
 ---
 
-<Base title="ROI calculator — build your business case" canonicalPath="/roi-calculator/">
+<Base title={copy.page.title} description={copy.page.description} canonicalPath="/roi-calculator/" locale={locale}>
   <div class="calc-hero">
     <div class="wrap">
       <div class="crumb" style="color:var(--muted-2);margin-bottom:18px">
-        <a href={u('/')}>Platform</a>
-        <span class="sep">/</span>
-        <span>ROI calculator</span>
+        <a href={localizedPath('/')}>{copy.breadcrumb.platform}</a>
+        <span class="sep">{copy.breadcrumb.separator}</span>
+        <span>{copy.breadcrumb.label}</span>
       </div>
-      <h1>Build your business case in 30 seconds.</h1>
-      <p>Adjust the inputs to match your operation. Everything updates live — screenshot the result and paste it into your internal proposal.</p>
+      <h1>{copy.hero.title}</h1>
+      <p>{copy.hero.description}</p>
     </div>
   </div>
 
-  <CalculatorIsland />
+  <CalculatorIsland locale={locale} />
 
   <div class="wrap">
     <div class="cta-row" style="margin-top:26px;margin-bottom:80px">
-      <a class="btn btn-primary btn-lg" href="#" data-trial-open data-event="cta-start-trial">Start 10,000-decision trial</a>
-      <a class="btn btn-ghost btn-lg" href={u('/usage/#fraud-detection')} data-event="story-open-fraud-detection">See it decide →</a>
+      <a class="btn btn-primary btn-lg" href="#" data-trial-open data-event="cta-start-trial">{copy.cta.startTrial}</a>
+      <a class="btn btn-ghost btn-lg" href={localizedPath('/usage/#fraud-detection')} data-event="story-open-fraud-detection">{copy.cta.usageStory}</a>
     </div>
   </div>
 </Base>

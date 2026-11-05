@@ -1,12 +1,18 @@
 ---
-import { STORIES, storyCurl, storyResponse, getStory } from '../lib/stories';
+import { storyCurl, storyResponse, getStory } from '../lib/stories';
+import { getUsageCopy, type UsageStorySlug } from '../lib/i18n/secondary/usage';
+import type { LocaleInput } from '../lib/i18n';
 
 interface Props {
   storySlug: string;
+  /** Locale supplied by the usage page or a localized route wrapper. */
+  locale?: LocaleInput;
 }
 
-const { storySlug } = Astro.props;
+const { storySlug, locale } = Astro.props;
+const copy = getUsageCopy(locale);
 const story = getStory(storySlug);
+const storyCopy = copy.stories[story.slug as UsageStorySlug];
 const curl = storyCurl(story);
 const response = storyResponse(story);
 const reqId = `req-${story.slug}`;
@@ -17,41 +23,43 @@ const resId = `res-${story.slug}`;
   <div class="api-bar">
     <span class="api-method">POST</span>
     <span class="api-url">https://airmino.com/v1/decide</span>
-    <span class="api-story">{story.label}</span>
+    <span class="api-story">{storyCopy.label}</span>
   </div>
   <div class="api-grid">
     <div class="api-pane">
       <div class="api-pane-head">
-        <span>Request</span>
+        <span>{copy.api.request}</span>
         <button
           type="button"
           class="api-copy"
           data-copy-target={reqId}
           data-event={`story-copy-curl-${story.slug}`}
-          aria-label={`Copy curl request for ${story.label}`}
+          data-copied-label={copy.api.copied}
+          aria-label={copy.api.copyRequestLabel.replace('{story}', storyCopy.label)}
         >
-          Copy
+          {copy.api.copy}
         </button>
       </div>
       <pre id={reqId} class="api-code api-req">{curl}</pre>
     </div>
     <div class="api-pane api-pane-dark">
       <div class="api-pane-head">
-        <span>Response</span>
+        <span>{copy.api.response}</span>
         <button
           type="button"
           class="api-copy"
           data-copy-target={resId}
           data-event={`story-copy-response-${story.slug}`}
-          aria-label={`Copy JSON response for ${story.label}`}
+          data-copied-label={copy.api.copied}
+          aria-label={copy.api.copyResponseLabel.replace('{story}', storyCopy.label)}
         >
-          Copy
+          {copy.api.copy}
         </button>
       </div>
       <pre id={resId} class="api-code api-res">{response}</pre>
       <div class="api-meta">
-        <span>200 OK · <strong>{story.latencyMs}ms</strong></span>
-        <span>static example · zero network</span>
+        <span>{copy.api.statusOk} · <strong>{story.latencyMs}ms</strong></span>
+        <span>{copy.api.statusSuffix}</span>
       </div>
     </div>
   </div>
@@ -68,9 +76,9 @@ const resId = `res-${story.slug}`;
       var pre = document.getElementById(btn.getAttribute('data-copy-target'));
       if (!pre) return;
       var text = pre.textContent || '';
-      function done() {
-        var original = btn.textContent;
-        btn.textContent = 'Copied';
+       function done() {
+         var original = btn.textContent;
+         btn.textContent = btn.getAttribute('data-copied-label') || 'Copied';
         setTimeout(function () { btn.textContent = original; }, 1200);
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {

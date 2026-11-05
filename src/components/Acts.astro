@@ -1,28 +1,28 @@
 ---
+import { getHomeCopy, type LocaleInput } from '../lib/i18n/home';
+
+interface Props {
+  locale?: LocaleInput;
+}
+
+const { locale } = Astro.props;
+const copy = getHomeCopy(locale);
 ---
 
 <section class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="kicker">The problem</div>
-      <h2>Your decision layer is the bottleneck nobody budgets for.</h2>
+      <div class="kicker">{copy.acts.kicker}</div>
+      <h2>{copy.acts.title}</h2>
     </div>
     <div class="acts">
-      <div class="act">
-        <span class="n">01 — SITUATION</span>
-        <h3>Rules engines don't generalize</h3>
-        <p>Every new edge case means another branch, another deploy, another quarter of maintenance. The rule tree grows faster than the team maintaining it.</p>
-      </div>
-      <div class="act">
-        <span class="n">02 — COMPLICATION</span>
-        <h3>LLMs don't fit operations</h3>
-        <p>Prompted models are slow, expensive, and return text you have to parse. When parsing fails at 3am, someone gets paged. That's not a decision layer — it's a liability.</p>
-      </div>
-      <div class="act">
-        <span class="n">03 — RESOLUTION</span>
-        <h3>Define choices at request time</h3>
-        <p>Airmino takes your options as input and returns exactly one, with a calibrated probability. Add a new option by changing the payload — not by retraining a model.</p>
-      </div>
+      {copy.acts.items.map((item) => (
+        <div class="act">
+          <span class="n">{item.number}</span>
+          <h3>{item.title}</h3>
+          <p>{item.description}</p>
+        </div>
+      ))}
     </div>
   </div>
 </section>

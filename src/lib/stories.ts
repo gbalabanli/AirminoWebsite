@@ -128,7 +128,7 @@ function contextLines(context: Story['context']): string {
     .map(([k, v]) => {
       let rendered: string;
       if (typeof v === 'string') rendered = `"${v}"`;
-      else if (MONEY_KEYS.has(k)) rendered = v.toFixed(2);
+      else if (typeof v === 'number' && MONEY_KEYS.has(k)) rendered = v.toFixed(2);
       else rendered = String(v);
       return `      "${k}": ${rendered}`;
     })

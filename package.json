@@ -8,7 +8,10 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "verify:i18n": "node --experimental-strip-types scripts/verify-i18n.mjs",
+    "verify:translations": "node --experimental-strip-types scripts/verify-home-i18n.mjs && node --experimental-strip-types scripts/verify-secondary-i18n.mjs",
+    "verify:sitemap": "node scripts/verify-sitemap.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

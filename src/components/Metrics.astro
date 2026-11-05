@@ -1,30 +1,30 @@
 ---
+import { getHomeCopy, type LocaleInput } from '../lib/i18n/home';
+
+interface Props {
+  locale?: LocaleInput;
+}
+
+const { locale } = Astro.props;
+const copy = getHomeCopy(locale);
 ---
 
 <section class="band">
   <div class="wrap">
     <div class="sec-head">
-      <div class="kicker">By the numbers</div>
-      <h2>Built for the throughput your ops team actually needs.</h2>
-      <p>Airmino returns a single calibrated choice from a set you define at request time — never free-form text.</p>
+      <div class="kicker">{copy.metrics.kicker}</div>
+      <h2>{copy.metrics.title}</h2>
+      <p>{copy.metrics.description}</p>
     </div>
     <div class="metrics">
-      <div class="metric">
-        <span class="val a">90ms</span>
-        <div class="lbl">p50 latency. p99 holds at <b>140ms</b> under sustained load.</div>
-      </div>
-      <div class="metric">
-        <span class="val m">$0.04</span>
-        <div class="lbl">Per 1,000 decisions. Volume tiers down to $0.018.</div>
-      </div>
-      <div class="metric">
-        <span class="val a">100%</span>
-        <div class="lbl">Schema-valid outputs. Zero parse failures, zero retries.</div>
-      </div>
-      <div class="metric">
-        <span class="val m">0</span>
-        <div class="lbl">Retraining cycles required to add a new option or rule.</div>
-      </div>
+      {copy.metrics.items.map((item) => (
+        <div class="metric">
+          <span class={`val ${item.tone}`}>{item.value}</span>
+          <div class="lbl">
+            {item.label.map((part) => part.kind === 'strong' ? <b>{part.value}</b> : part.value)}
+          </div>
+        </div>
+      ))}
     </div>
   </div>
 </section>

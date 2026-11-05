@@ -1,5 +1,20 @@
 ---
 import BeforeAfterTable from './BeforeAfterTable.astro';
+import { getRoiCopy } from '../lib/i18n/secondary/roi';
+import type { LocaleInput } from '../lib/i18n';
+
+interface Props {
+  /** Locale supplied by the ROI page or a localized route wrapper. */
+  locale?: LocaleInput;
+}
+
+const { locale } = Astro.props;
+const copy = getRoiCopy(locale);
+const calculatorCopy = copy.calculator;
+const initialAnnualSub = calculatorCopy.annualSubTemplate
+  .replace('{volume}', '250,000')
+  .replace('{cost}', '$0.85');
+const initialMonthlySub = calculatorCopy.monthlySubInitial;
 
 /* Interactive ROI calculator. The math (money/compact/calc/bind) is a
    verbatim port of the <script> in docs/design/index.html; only wiring
@@ -10,92 +25,91 @@ import BeforeAfterTable from './BeforeAfterTable.astro';
 
 <div class="wrap calc-grid">
   <div class="panel">
-    <h2>Your current operation</h2>
-    <p class="sub">// drag or type to adjust</p>
+    <h2>{calculatorCopy.operationTitle}</h2>
+    <p class="sub">{calculatorCopy.adjustHint}</p>
 
     <div class="field">
-      <label for="volume">Decisions per month</label>
-      <input type="range" id="volumeRange" min="10000" max="5000000" step="10000" value="250000" aria-label="Decisions per month (slider)" />
+      <label for="volume">{calculatorCopy.decisionsPerMonth}</label>
+      <input type="range" id="volumeRange" min="10000" max="5000000" step="10000" value="250000" aria-label={calculatorCopy.decisionsSliderLabel} />
       <div class="num-input">
         <span>#</span>
         <input type="number" id="volume" value="250000" min="1000" step="1000" />
       </div>
-      <div class="hint" id="volumeHint">250,000 decisions / month</div>
+      <div class="hint" id="volumeHint">{calculatorCopy.volumeHintTemplate.replace('{volume}', '250,000')}</div>
     </div>
 
     <div class="field">
-      <label for="cost">Current cost per decision</label>
-      <input type="range" id="costRange" min="0.01" max="5" step="0.01" value="0.85" aria-label="Current cost per decision (slider)" />
+      <label for="cost">{calculatorCopy.currentCostPerDecision}</label>
+      <input type="range" id="costRange" min="0.01" max="5" step="0.01" value="0.85" aria-label={calculatorCopy.currentCostSliderLabel} />
       <div class="num-input">
         <span>$</span>
         <input type="number" id="cost" value="0.85" min="0.01" step="0.01" />
       </div>
-      <div class="hint">Include analyst time, tooling and infra</div>
+      <div class="hint">{calculatorCopy.includeCostHint}</div>
     </div>
 
     <div class="field">
-      <label for="rate">Airmino rate per 1,000 decisions</label>
-      <input type="range" id="rateRange" min="0.01" max="0.20" step="0.005" value="0.04" aria-label="Airmino rate per 1,000 decisions (slider)" />
+      <label for="rate">{calculatorCopy.airminoRatePerThousand}</label>
+      <input type="range" id="rateRange" min="0.01" max="0.20" step="0.005" value="0.04" aria-label={calculatorCopy.airminoRateSliderLabel} />
       <div class="num-input">
         <span>$</span>
         <input type="number" id="rate" value="0.04" min="0.01" step="0.005" />
       </div>
-      <div class="hint">List price $0.04 · volume tiers to $0.018</div>
+      <div class="hint">{calculatorCopy.listPriceHint}</div>
     </div>
 
     <div class="field">
-      <label for="platform">Monthly platform fee</label>
+      <label for="platform">{calculatorCopy.monthlyPlatformFee}</label>
       <div class="num-input">
         <span>$</span>
         <input type="number" id="platform" value="0" min="0" step="100" />
       </div>
-      <div class="hint">Set to 0 for usage-only pricing</div>
+      <div class="hint">{calculatorCopy.usageOnlyHint}</div>
     </div>
 
     <div class="calc-note">
-      <b>Note:</b> these are directional estimates. Your actual numbers depend on
-      escalation thresholds, deployment topology and contract tier.
+      <b>{calculatorCopy.noteLabel}</b>{calculatorCopy.note}
     </div>
   </div>
 
   <div>
     <div class="results" aria-live="polite">
       <div class="result hero-res">
-        <div class="rl">Projected annual savings</div>
+        <div class="rl">{calculatorCopy.projectedAnnualSavings}</div>
         <div class="rv" id="annualSavings">$2,430,000</div>
-        <div class="rs" id="annualSub">Based on 250,000 decisions/month at $0.85 today</div>
+        <div class="rs" id="annualSub">{initialAnnualSub}</div>
       </div>
 
       <div class="result">
-        <div class="rl">Monthly savings</div>
+        <div class="rl">{calculatorCopy.monthlySavings}</div>
         <div class="rv" id="monthlySavings">$202,500</div>
-        <div class="rs" id="monthlySub">Net of Airmino spend</div>
+        <div class="rs" id="monthlySub">{initialMonthlySub}</div>
       </div>
 
       <div class="result">
-        <div class="rl">Cost reduction</div>
+        <div class="rl">{calculatorCopy.costReduction}</div>
         <div class="rv" id="reduction">95.3%</div>
-        <div class="rs">Per-decision cost, before vs. after</div>
+        <div class="rs">{calculatorCopy.reductionSub}</div>
       </div>
     </div>
 
     <div class="panel">
-      <h2>Cost comparison</h2>
-      <p class="sub">// monthly, all-in</p>
+      <h2>{calculatorCopy.comparisonTitle}</h2>
+      <p class="sub">{calculatorCopy.comparisonHint}</p>
 
       <div class="bars">
         <div class="bar-row">
           <div class="bl">
-            <span>Current cost</span>
-            <span class="bv old" id="barOldLabel">$212,500 / mo</span>
+            <span>{calculatorCopy.currentCost}</span>
+            <span class="bv old" id="barOldLabel">$212,500{calculatorCopy.monthlySuffix}</span>
           </div>
           <div class="bar"><i class="old" id="barOld" style="width:100%"></i></div>
         </div>
 
         <div class="bar-row">
           <div class="bl">
-            <span>With Airmino</span>
-            <span class="bv new" id="barNewLabel">$10,000 / mo</span>
+            <span>{calculatorCopy.withAirmino}</span>
+            <span class="bv new" id="barNewLabel">$10,000{calculatorCopy.monthlySuffix}</span>
           </div>
           <div class="bar"><i class="new" id="barNew" style="width:5%"></i></div>
         </div>
@@ -103,11 +117,11 @@ import BeforeAfterTable from './BeforeAfterTable.astro';
 
       <div class="calc-ba">
         <BeforeAfterTable
-          headers={['Line item', 'Current', 'With Airmino']}
+          headers={calculatorCopy.tableHeaders}
           rows={[
-            { name: 'Monthly decision cost', before: '$212,500', after: '$10,000', beforeId: 'tblOld', afterId: 'tblNew' },
-            { name: 'Annual decision cost', before: '$2,550,000', after: '$120,000', beforeId: 'tblOldYr', afterId: 'tblNewYr' },
-            { name: 'Cost per decision', before: '$0.8500', after: '$0.0400', beforeId: 'tblOldUnit', afterId: 'tblNewUnit' },
+            { name: calculatorCopy.tableRows.monthlyDecisionCost, before: '$212,500', after: '$10,000', beforeId: 'tblOld', afterId: 'tblNew' },
+            { name: calculatorCopy.tableRows.annualDecisionCost, before: '$2,550,000', after: '$120,000', beforeId: 'tblOldYr', afterId: 'tblNewYr' },
+            { name: calculatorCopy.tableRows.costPerDecision, before: '$0.8500', after: '$0.0400', beforeId: 'tblOldUnit', afterId: 'tblNewUnit' },
           ]}
         />
       </div>
@@ -115,7 +129,7 @@ import BeforeAfterTable from './BeforeAfterTable.astro';
   </div>
 </div>
 
-<script>
+<script define:vars={{ calculatorCopy }}>
 /* ---------- CALCULATOR (verbatim port) ---------- */
 const vol = document.getElementById('volume');
 const volRange = document.getElementById('volumeRange');
@@ -133,6 +147,12 @@ function compact(n) {
   if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
   if (n >= 1e3) return '$' + Math.round(n / 1e3) + 'k';
   return money(n);
+}
+
+function copyText(template, values) {
+  return template.replace(/\{(\w+)\}/g, function (_, key) {
+    return values[key] === undefined ? '' : values[key];
+  });
 }
 
 function calc() {
@@ -154,12 +174,15 @@ function calc() {
   document.getElementById('annualSavings').textContent =
     annualSave >= 0 ? compact(annualSave) : '-' + compact(Math.abs(annualSave));
   document.getElementById('annualSub').textContent =
-    'Based on ' + v.toLocaleString() + ' decisions/month at ' + money(c, 2) + ' today';
+    copyText(calculatorCopy.annualSubTemplate, {
+      volume: v.toLocaleString(),
+      cost: money(c, 2),
+    });
 
   document.getElementById('monthlySavings').textContent =
     monthlySave >= 0 ? compact(monthlySave) : '-' + compact(Math.abs(monthlySave));
   document.getElementById('monthlySub').textContent =
-    'Net of ' + compact(newMonthly) + ' in Airmino spend';
+    copyText(calculatorCopy.monthlySubTemplate, { amount: compact(newMonthly) });
 
   document.getElementById('reduction').textContent =
     (reduction >= 0 ? reduction.toFixed(1) : '0.0') + '%';
@@ -171,8 +194,8 @@ function calc() {
 
   document.getElementById('barOld').style.width = oldPct + '%';
   document.getElementById('barNew').style.width = newPct + '%';
-  document.getElementById('barOldLabel').textContent = compact(oldMonthly) + ' / mo';
-  document.getElementById('barNewLabel').textContent = compact(newMonthly) + ' / mo';
+  document.getElementById('barOldLabel').textContent = compact(oldMonthly) + calculatorCopy.monthlySuffix;
+  document.getElementById('barNewLabel').textContent = compact(newMonthly) + calculatorCopy.monthlySuffix;
 
   /* table */
   document.getElementById('tblOld').textContent = money(oldMonthly);
@@ -184,7 +207,7 @@ function calc() {
 
   /* hint */
   document.getElementById('volumeHint').textContent =
-    v.toLocaleString() + ' decisions / month';
+    copyText(calculatorCopy.volumeHintTemplate, { volume: v.toLocaleString() });
 }
 
 /* range <-> number syncing */

@@ -4,33 +4,44 @@ import StoryTabs from '../components/StoryTabs.astro';
 import StoryApiExample from '../components/StoryApiExample.astro';
 import { STORIES } from '../lib/stories';
 import { u } from '../lib/site';
+import { getUsageCopy, type UsageStorySlug } from '../lib/i18n/secondary/usage';
+import { localizePath, normalizeLocale, getLocaleFromPath, type LocaleInput } from '../lib/i18n';
+
+interface Props {
+  /** Locale supplied by a localized route wrapper; omitted means English. */
+  locale?: LocaleInput;
+}
+
+const { locale: requestedLocale } = Astro.props;
+const locale = normalizeLocale(requestedLocale ?? getLocaleFromPath(Astro.url.pathname));
+const copy = getUsageCopy(locale);
+const localizedPath = (path: string) => u(localizePath(path, locale));
 ---
 
 <Base
-  title="Usage stories — see Airmino decide"
-  description="Four worked examples of Airmino decision infrastructure: fraud detection, support routing, loan pre-qualification, and offer selection — each with the exact API call and result."
+  title={copy.page.title}
+  description={copy.page.description}
   canonicalPath="/usage/"
+  locale={locale}
 >
   <div class="usage-hero">
     <div class="wrap">
       <div class="crumb">
-        <a href={u('/')}>Platform</a>
-        <span class="sep">/</span>
-        <span>Usage stories</span>
+        <a href={localizedPath('/')}>{copy.breadcrumb.platform}</a>
+        <span class="sep">{copy.breadcrumb.separator}</span>
+        <span>{copy.breadcrumb.label}</span>
       </div>
-      <div class="kicker">Usage stories</div>
-      <h1>See Airmino decide.</h1>
+      <div class="kicker">{copy.hero.kicker}</div>
+      <h1>{copy.hero.title}</h1>
       <p>
-        Four worked examples of the same API — <code>POST /v1/decide</code> — applied to four
-        different workflows. Each story shows the problem, the exact call, and the result.
-        Static examples: nothing here executes or touches a network.
+        {copy.hero.introBeforeApi}<code>{copy.hero.apiPath}</code>{copy.hero.introAfterApi}{copy.hero.staticNote}
       </p>
     </div>
   </div>
 
   <section class="band">
     <div class="wrap">
-      <StoryTabs />
+      <StoryTabs locale={locale} />
 
       {STORIES.map((s, i) => (
         <article
@@ -41,26 +52,26 @@ import { u } from '../lib/site';
           hidden={i !== 0}
         >
           <div class="story-head">
-            <div class="story-co">{s.company}</div>
-            <h2>{s.headline}</h2>
-            <p>{s.problem}</p>
+            <div class="story-co">{copy.stories[s.slug as UsageStorySlug].company}</div>
+            <h2>{copy.stories[s.slug as UsageStorySlug].headline}</h2>
+            <p>{copy.stories[s.slug as UsageStorySlug].problem}</p>
           </div>
 
-          <StoryApiExample storySlug={s.slug} />
+          <StoryApiExample storySlug={s.slug} locale={locale} />
 
           <div class="story-outcome">
-            <div class="story-stat">{s.outcomeStat}</div>
+            <div class="story-stat">{copy.stories[s.slug as UsageStorySlug].outcomeStat}</div>
             <div>
-              <div class="story-stat-lbl">{s.outcomeLabel}</div>
-              <div class="story-note">{s.outcomeNote}</div>
+              <div class="story-stat-lbl">{copy.stories[s.slug as UsageStorySlug].outcomeLabel}</div>
+              <div class="story-note">{copy.stories[s.slug as UsageStorySlug].outcomeNote}</div>
             </div>
           </div>
         </article>
       ))}
 
       <div class="cta-row" style="margin-top:36px">
-        <a class="btn btn-primary btn-lg" href={u('/roi-calculator/')} data-event="cta-estimate">Estimate your savings</a>
-        <a class="btn btn-ghost btn-lg" href={u('/#pricing')} data-event="cta-pricing">See platform pricing →</a>
+        <a class="btn btn-primary btn-lg" href={localizedPath('/roi-calculator/')} data-event="cta-estimate">{copy.cta.estimate}</a>
+        <a class="btn btn-ghost btn-lg" href={localizedPath('/#pricing')} data-event="cta-pricing">{copy.cta.pricing}</a>
       </div>
     </div>
   </section>

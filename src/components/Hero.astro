@@ -1,21 +1,28 @@
 ---
 import Terminal from './Terminal.astro';
+import { getHomeCopy, type LocaleInput } from '../lib/i18n/home';
+
+interface Props {
+  locale?: LocaleInput;
+}
+
+const { locale } = Astro.props;
+const copy = getHomeCopy(locale);
 ---
 
 <div class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow"><span class="dot"></span> Decision infrastructure</div>
-      <h1>Make <em>1 million</em> operational decisions per hour.</h1>
+      <div class="eyebrow"><span class="dot"></span> {copy.hero.eyebrow}</div>
+      <h1>{copy.hero.titleBefore}<em>{copy.hero.titleHighlight}</em>{copy.hero.titleAfter}</h1>
       <p class="lede">
-        Calibrated, machine-readable judgments your systems can act on.
-        No text generation. No hallucination. <strong>$0.04 per thousand calls.</strong>
+        {copy.hero.lede} <strong>{copy.hero.price}</strong>
       </p>
       <div class="cta-row">
-        <a class="btn btn-primary btn-lg" href="#start" data-trial-open data-event="cta-start-trial">Start 10,000-decision trial</a>
-        <a class="btn btn-ghost btn-lg" href="#architecture" data-event="cta-architecture">Read the architecture paper →</a>
+        <a class="btn btn-primary btn-lg" href="#start" data-trial-open data-event="cta-start-trial">{copy.hero.startTrial}</a>
+        <a class="btn btn-ghost btn-lg" href="#architecture" data-event="cta-architecture">{copy.hero.architecture}</a>
       </div>
-      <div class="micro">Calibrated confidence · Schema-valid outputs · VPC or self-hosted</div>
+      <div class="micro">{copy.hero.micro}</div>
     </div>
 
     <Terminal />
@@ -23,11 +30,10 @@ import Terminal from './Terminal.astro';
 
   <div class="wrap">
     <div class="logo-strip">
-      <p>Powering decisions across</p>
-      <div class="logos">
-        <span>PAYMENTS</span><span>LENDING</span><span>SUPPORT</span>
-        <span>INSURANCE</span><span>MARKETPLACES</span><span>SAAS</span>
-      </div>
+        <p>{copy.hero.logosIntro}</p>
+        <div class="logos">
+          {copy.hero.logos.map((logo) => <span>{logo}</span>)}
+        </div>
     </div>
   </div>
 </div>

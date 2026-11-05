@@ -9,5 +9,24 @@ export default defineConfig({
   site: 'https://airmino.com',
   base: '/',
   output: 'static',
-  integrations: [sitemap()],
+  i18n: {
+    locales: ['en', 'tr', 'es', 'de'],
+    defaultLocale: 'en',
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: 'en',
+          tr: 'tr',
+          es: 'es',
+          de: 'de',
+        },
+      },
+    }),
+  ],
 });

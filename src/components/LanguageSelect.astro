@@ -1,0 +1,100 @@
+---
+import {
+  getLocaleFromPath,
+  getTranslations,
+  LOCALE_METADATA,
+  SUPPORTED_LOCALES,
+  localizePath,
+  normalizeLocale,
+  type LocaleInput,
+} from '../lib/i18n';
+import { u } from '../lib/site';
+
+interface Props {
+  id?: string;
+  locale?: LocaleInput;
+}
+
+const { id = 'language-select', locale: requestedLocale } = Astro.props;
+const currentLocale = normalizeLocale(requestedLocale ?? getLocaleFromPath(Astro.url.pathname));
+const translations = getTranslations(currentLocale);
+const currentPath = Astro.url.pathname;
+---
+
+<div class="language-picker">
+  <label class="visually-hidden" for={id}>{translations.common.language}</label>
+  <select
+    id={id}
+    class="language-select"
+    aria-label={translations.common.language}
+    data-language-select
+  >
+    {SUPPORTED_LOCALES.map((locale) => (
+      <option
+        value={u(localizePath(currentPath, locale))}
+        selected={locale === currentLocale}
+      >{LOCALE_METADATA[locale].nativeName}</option>
+    ))}
+  </select>
+</div>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll('[data-language-select]').forEach(function (element) {
+      if (!(element instanceof HTMLSelectElement)) return;
+
+      element.addEventListener('change', function () {
+        var target = element.value;
+        if (!target) return;
+
+        var url = new URL(target, window.location.href);
+        // The static option path is generated with localizePath(); query and
+        // fragment state only exists in the browser, so carry both over here.
+        url.search = window.location.search;
+        url.hash = window.location.hash;
+        window.location.assign(url.href);
+      });
+    });
+  })();
+</script>
+
+<style>
+  .language-picker {
+    display: flex;
+    align-items: center;
+  }
+  .language-select {
+    min-height: 36px;
+    padding: 7px 26px 7px 9px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-size: 12.5px;
+    cursor: pointer;
+  }
+  .language-select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  @media (max-width: 600px) {
+    .language-select {
+      max-width: 82px;
+      padding-inline: 7px 20px;
+      font-size: 12px;
+    }
+  }
+</style>

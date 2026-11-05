@@ -1,80 +1,67 @@
 ---
 import Base from '../layouts/Base.astro';
 import { u } from '../lib/site';
+import { getGdprCopy } from '../lib/i18n/secondary/gdpr';
+import { getLocaleFromPath, localizePath, normalizeLocale, type LocaleInput } from '../lib/i18n';
+
+interface Props {
+  /** Locale supplied by a localized route wrapper; omitted means English. */
+  locale?: LocaleInput;
+}
+
+const { locale: requestedLocale } = Astro.props;
+const locale = normalizeLocale(requestedLocale ?? getLocaleFromPath(Astro.url.pathname));
+const copy = getGdprCopy(locale);
+const localizedPath = (path: string) => u(localizePath(path, locale));
 ---
 
 <Base
-  title="GDPR & data processing — Airmino"
-  description="How Airmino handles personal data: minimization, VPC/self-hosted deployment, retention, subprocessors, and your rights under the GDPR."
+  title={copy.page.title}
+  description={copy.page.description}
   canonicalPath="/gdpr/"
+  locale={locale}
 >
   <div class="gdpr-hero">
     <div class="wrap">
       <div class="crumb">
-        <a href={u('/')}>Home</a>
-        <span class="sep">/</span>
-        <span>GDPR &amp; data processing</span>
+        <a href={localizedPath('/')}>{copy.breadcrumb.home}</a>
+        <span class="sep">{copy.breadcrumb.separator}</span>
+        <span>{copy.breadcrumb.label}</span>
       </div>
-      <div class="kicker">Compliance</div>
-      <h1>Your data stays yours.</h1>
-      <p>
-        Airmino is decision infrastructure, not a data business. We process the minimum personal data
-        needed to return a decision, we never train models on your data, and you can keep everything
-        inside your own network. Last updated: October 2026.
-      </p>
+      <div class="kicker">{copy.hero.kicker}</div>
+      <h1>{copy.hero.title}</h1>
+      <p>{copy.hero.description}</p>
     </div>
   </div>
 
   <section class="band">
     <div class="wrap gdpr-grid">
       <div class="gdpr-block">
-        <h2>What we process</h2>
+        <h2>{copy.sections.process.title}</h2>
         <p>
-          To return a decision we process the fields you send in <code>POST /v1/decide</code> —
-          typically a decision name, the options you define, and context fields (e.g. amounts,
-          priorities, segments). What you put in the payload is what gets processed; nothing more
-          is collected. Send reference IDs instead of raw personal data wherever your workflow allows it.
+          {copy.sections.process.beforeEndpoint}<code>{copy.sections.process.endpoint}</code>{copy.sections.process.afterEndpoint}
         </p>
       </div>
       <div class="gdpr-block">
-        <h2>Where it runs</h2>
-        <p>
-          Airmino deploys inside your VPC or fully self-hosted as a single container with no external
-          calls — decision payloads never leave your network and there is no cross-border transfer to
-          manage. On the managed cloud option, processing stays in the region you select and logs are
-          retained for 30 days, then deleted.
-        </p>
+        <h2>{copy.sections.whereRuns.title}</h2>
+        <p>{copy.sections.whereRuns.body}</p>
       </div>
       <div class="gdpr-block">
-        <h2>No training on your data</h2>
-        <p>
-          Customer payloads and decisions are never used to train, fine-tune, or evaluate models.
-          Product telemetry (request counts, latency distributions, error rates) contains no payload
-          content and is aggregated before storage.
-        </p>
+        <h2>{copy.sections.noTraining.title}</h2>
+        <p>{copy.sections.noTraining.body}</p>
       </div>
       <div class="gdpr-block">
-        <h2>Your rights</h2>
-        <p>Under the GDPR you can request access, rectification, erasure, restriction, portability, and objection for personal data we process as a processor. Because most deployments keep data inside your own infrastructure, many requests are fastest answered by your own team — we support you with deletion tooling and a data processing agreement on request.</p>
-        <p>To exercise your rights, contact <a href="mailto:privacy@airmino.com">privacy@airmino.com</a>. We respond within 30 days.</p>
+        <h2>{copy.sections.rights.title}</h2>
+        <p>{copy.sections.rights.body}</p>
+        <p>{copy.sections.rights.contactBeforeEmail}<a href={`mailto:${copy.sections.rights.email}`}>{copy.sections.rights.email}</a>{copy.sections.rights.contactAfterEmail}</p>
       </div>
       <div class="gdpr-block">
-        <h2>Subprocessors &amp; DPA</h2>
-        <p>
-          Self-hosted and VPC deployments have no subprocessors — there is nobody downstream to list.
-          The managed cloud option uses only infrastructure hosting in your selected region.
-          The trial signup form is processed by FormSubmit (form-to-email delivery) — the only
-          website subprocessor. A data processing agreement (DPA) incorporating the EU Standard
-          Contractual Clauses where relevant is available on request before any pilot.
-        </p>
+        <h2>{copy.sections.subprocessors.title}</h2>
+        <p>{copy.sections.subprocessors.body}</p>
       </div>
       <div class="gdpr-block">
-        <h2>Security</h2>
-        <p>
-          Encryption in transit (TLS 1.2+) and at rest, mTLS service identity between components,
-          and append-only audit logs for decision traces. Full control mappings are provided under NDA
-          during enterprise evaluation.
-        </p>
+        <h2>{copy.sections.security.title}</h2>
+        <p>{copy.sections.security.body}</p>
       </div>
     </div>
   </section>
@@ -82,8 +69,8 @@ import { u } from '../lib/site';
   <section class="band alt">
     <div class="wrap">
       <div class="cta-row">
-        <a class="btn btn-primary btn-lg" href={u('/usage/')} data-event="gdpr-see-usage">See what it decides →</a>
-        <a class="btn btn-ghost btn-lg" href={u('/#pricing')} data-event="cta-pricing">See platform pricing</a>
+        <a class="btn btn-primary btn-lg" href={localizedPath('/usage/')} data-event="gdpr-see-usage">{copy.cta.usage}</a>
+        <a class="btn btn-ghost btn-lg" href={localizedPath('/#pricing')} data-event="cta-pricing">{copy.cta.pricing}</a>
       </div>
     </div>
   </section>

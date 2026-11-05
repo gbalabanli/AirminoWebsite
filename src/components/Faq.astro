@@ -1,34 +1,28 @@
 ---
+import { getHomeCopy, type LocaleInput } from '../lib/i18n/home';
+
+interface Props {
+  locale?: LocaleInput;
+}
+
+const { locale } = Astro.props;
+const copy = getHomeCopy(locale);
 ---
 
 <section class="band" id="architecture">
   <div class="wrap">
     <div class="sec-head">
-      <div class="kicker">Before you ask</div>
-      <h2>The questions your technical evaluator will raise.</h2>
-      <p>Answered here so you don't need a call to get to the interesting part.</p>
+      <div class="kicker">{copy.faq.kicker}</div>
+      <h2>{copy.faq.title}</h2>
+      <p>{copy.faq.description}</p>
     </div>
     <div class="faq">
-      <div class="q">
-        <h3>How is this different from a classifier?</h3>
-        <p>A classifier is trained on a fixed label set. Airmino takes <code>options[]</code> as a request parameter, so the same model handles "approve/hold/decline" at 9am and "tier_1/tier_2/tier_3" at 9:05. No retraining, no redeploy.</p>
-      </div>
-      <div class="q">
-        <h3>What's the accuracy versus an LLM?</h3>
-        <p>On structured decision tasks we match or exceed prompted GPT-class models on top-1 accuracy, with calibration error under 2%. Full confidence intervals and per-domain breakdowns are in the benchmark appendix.</p>
-      </div>
-      <div class="q">
-        <h3>Can it run inside our infrastructure?</h3>
-        <p>Yes. Deploy in your VPC or fully self-hosted. The model is a single container with no external calls — no data leaves your network, no egress costs, no third-party subprocessor.</p>
-      </div>
-      <div class="q">
-        <h3>What's the failure mode?</h3>
-        <p>Airmino can only return one of the options you supplied, in a fixed schema. It cannot invent a category or emit free text. When confidence falls below your threshold, it returns <code>escalate: true</code> instead of guessing.</p>
-      </div>
-      <div class="q">
-        <h3>Which workflows does this fit?</h3>
-        <p>Anywhere a system must pick one option from a set you define: fraud triage, support ticket routing, loan pre-qualification, offer selection, content-moderation appeal. If the decision fits in a request payload and the answer fits a schema, it fits Airmino.</p>
-      </div>
+      {copy.faq.items.map((item) => (
+        <div class="q">
+          <h3>{item.question}</h3>
+          <p>{item.answer.map((part) => part.kind === 'code' ? <code>{part.value}</code> : part.value)}</p>
+        </div>
+      ))}
     </div>
   </div>
 </section>

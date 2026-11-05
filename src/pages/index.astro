@@ -9,16 +9,27 @@ import Faq from '../components/Faq.astro';
 import CaseTeasers from '../components/CaseTeasers.astro';
 import Pricing from '../components/Pricing.astro';
 import FinalCta from '../components/FinalCta.astro';
+import { getLocaleFromPath, normalizeLocale, type LocaleInput } from '../lib/i18n';
+import { getHomeCopy } from '../lib/i18n/home';
+
+interface Props {
+  /** Locale supplied by a localized route wrapper; omitted means infer from the URL. */
+  locale?: LocaleInput;
+}
+
+const { locale: requestedLocale } = Astro.props;
+const locale = normalizeLocale(requestedLocale ?? getLocaleFromPath(Astro.url.pathname));
+const copy = getHomeCopy(locale);
 ---
 
-<Base title="Airmino — Decision Infrastructure for Automated Operations">
-  <Hero />
-  <Metrics />
-  <Speeds />
-  <Acts />
-  <BenchmarkTable />
-  <Faq />
-  <CaseTeasers />
-  <Pricing />
-  <FinalCta />
+<Base title={copy.meta.title} description={copy.meta.description} locale={locale}>
+  <Hero locale={locale} />
+  <Metrics locale={locale} />
+  <Speeds locale={locale} />
+  <Acts locale={locale} />
+  <BenchmarkTable locale={locale} />
+  <Faq locale={locale} />
+  <CaseTeasers locale={locale} />
+  <Pricing locale={locale} />
+  <FinalCta locale={locale} />
 </Base>

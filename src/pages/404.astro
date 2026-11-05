@@ -1,13 +1,25 @@
 ---
 import Base from '../layouts/Base.astro';
 import { u } from '../lib/site';
+import { getNotFoundCopy } from '../lib/i18n/secondary/not-found';
+import { getLocaleFromPath, localizePath, normalizeLocale, type LocaleInput } from '../lib/i18n';
+
+interface Props {
+  /** Locale supplied by a localized route wrapper; omitted means English. */
+  locale?: LocaleInput;
+}
+
+const { locale: requestedLocale } = Astro.props;
+const locale = normalizeLocale(requestedLocale ?? getLocaleFromPath(Astro.url.pathname));
+const copy = getNotFoundCopy(locale);
+const localizedPath = (path: string) => u(localizePath(path, locale));
 ---
 
-<Base title="Page not found">
+<Base title={copy.pageTitle} description={copy.description} locale={locale}>
   <section class="wrap stub">
     <p class="kicker">404</p>
-    <h1>This page doesn't exist yet.</h1>
-    <p><a href={u('/')}>Back to the homepage →</a></p>
+    <h1>{copy.title}</h1>
+    <p><a href={localizedPath('/')}>{copy.backLink}</a></p>
   </section>
 </Base>
 
